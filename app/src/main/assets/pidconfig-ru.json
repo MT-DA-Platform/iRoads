@@ -1,0 +1,660 @@
+{
+   "all_pids":{
+      "obd2_fuel_system_status":{
+         "label":"Состояние топливной системы",
+         "unit":"",
+         "mode":"01",
+         "pid":"03",
+         "response_bytes":2,
+         "expression":"B*256 + A",
+         "min":0,
+         "max":4096
+      },
+      "obd2_engine_load_calculated":{
+         "label":"Расчетная нагрузка двигателя",
+         "unit":"%",
+         "mode":"01",
+         "pid":"04",
+         "response_bytes":1,
+         "expression":"A*100/255",
+         "min":0,
+         "max":100,
+         "exPlatforms":{
+            "vinli": "CALCULATED_LOAD_VALUE"
+         }
+      },
+      "obd2_engine_temp":{
+         "label":"Температура охлаждающей жидкости",
+         "unit":" C",
+         "mode":"01",
+         "pid":"05",
+         "response_bytes":2,
+         "expression":"A-40",
+         "min":-40,
+         "max":160,
+         "exPlatforms":{
+            "vinli": "COOLANT_TEMP_C"
+         }
+      },
+      "obd2_engine_temp_F":{
+         "label":"Температура охлаждающей жидкости",
+         "unit":"°F",
+         "mode":"01",
+         "pid":"05",
+         "response_bytes":2,
+         "expression":"((A - 40) * 1.8) + 32",
+         "min":-40,
+         "max":600,
+         "exPlatforms":{
+            "vinli": "COOLANT_TEMP_F"
+         }
+      },
+      "obd2_short_term_fuel_trim_bank1":{
+         "label":"Краткосрочная топливная % корректировка - Банк1",
+         "unit":"%",
+         "mode":"01",
+         "pid":"06",
+         "response_bytes":1,
+         "expression":"(A-128) * 100/128",
+         "min":-100,
+         "max":100
+      },
+      "obd2_long_term_fuel_trim_bank1":{
+         "label":"Долгосрочная топливная % корректировка - Банк1",
+         "unit":"%",
+         "mode":"01",
+         "pid":"07",
+         "response_bytes":1,
+         "expression":"(A-128) * 100/128",
+         "min":-100,
+         "max":100
+      },
+      "obd2_short_term_fuel_trim_bank2":{
+         "label":"Краткосрочная топливная % корректировка - Банк2",
+         "unit":"%",
+         "mode":"01",
+         "pid":"08",
+         "response_bytes":1,
+         "expression":"(A-128) * 100/128",
+         "min":-100,
+         "max":100
+      },
+      "obd2_long_term_fuel_trim_bank2":{
+         "label":"Долгосрочная топливная % корректировка - Банк2",
+         "unit":"%",
+         "mode":"01",
+         "pid":"09",
+         "response_bytes":1,
+         "expression":"(A-128) * 100/128",
+         "min":-100,
+         "max":100
+      },
+      "obd2_fuel_pressure":{
+         "label":"Давление топлива",
+         "unit":"кПа",
+         "mode":"01",
+         "pid":"0A",
+         "response_bytes":1,
+         "expression":"A*3",
+         "min":0,
+         "max":765
+      },
+      "obd2_intake_manifold_abs_pressure":{
+         "label":"Впускной коллектор абсолютное давление",
+         "unit":"kPa",
+         "mode":"01",
+         "pid":"0B",
+         "response_bytes":1,
+         "expression":"A",
+         "min":0,
+         "max":255
+      },
+      "obd2_engine_rpm":{
+         "label":"Число оборотов двигателя",
+         "unit":"овм",
+         "mode":"01",
+         "pid":"0C",
+         "response_bytes":2,
+         "expression":"(B*256 + A)/4",
+         "min":0,
+         "max":6000,
+         "exPlatforms":{
+            "vinli": "RPM"
+         }
+      },
+      "obd2_speed":{
+         "label":"Скорость",
+         "unit":"км/ч",
+         "mode":"01",
+         "pid":"0D",
+         "response_bytes":1,
+         "expression":"A",
+         "min":0,
+         "max":200,
+         "exPlatforms":{
+            "vinli": "SPEED_KPH"
+         }
+      },
+      "obd2_speed_mph":{
+         "label":"Скорость",
+         "unit":"mph",
+         "mode":"01",
+         "pid":"0D",
+         "response_bytes":1,
+         "expression":"A * 0.621371",
+         "min":0,
+         "max":200,
+         "exPlatforms":{
+            "vinli": "SPEED_MPH"
+         }
+      },
+      "obd2_control_mod_voltage":{
+         "label":"Модуль управления напряжения",
+         "unit":"V",
+         "mode":"01",
+         "pid":"42",
+         "response_bytes":2,
+         "expression":"(256*B + A)/1000",
+         "min":0,
+         "max":100,
+         "exPlatforms":{
+            "vinli": "CONTROL_MODULE_VOLTAGE"
+         }
+      },
+      "obd2_timing_advance":{
+         "label":"Выдвижение времени",
+         "unit":"степени",
+         "mode":"01",
+         "pid":"0E",
+         "response_bytes":1,
+         "expression":"(A-128)/2",
+         "min":-64,
+         "max":64
+      },
+      "obd2_intake_air_temperature":{
+         "label":"Температура наружного воздуха",
+         "unit":"°C",
+         "mode":"01",
+         "pid":"0F",
+         "response_bytes":1,
+         "expression":"A-40",
+         "min":-40,
+         "max":215
+      },
+      "obd2_MAF":{
+         "label":"Массовый расход",
+         "unit":"г/с",
+         "mode":"01",
+         "pid":"10",
+         "response_bytes":2,
+         "expression":"((B*256)+A)/100",
+         "min":0,
+         "max":100,
+         "exPlatforms":{
+            "vinli": "MASS_AIRFLOW"
+         }
+      },
+      "obd2_throttle_pos":{
+         "label":"Положение дроссельной заслонки",
+         "unit":"%",
+         "mode":"01",
+         "pid":"11",
+         "response_bytes":1,
+         "expression":"A*100/255",
+         "min":0,
+         "max":100
+      },
+      "obd2_o2sensorV_B1S1":{
+         "label":"O2 B1S1",
+         "unit":"V",
+         "mode":"01",
+         "pid":"14",
+         "response_bytes":2,
+         "expression":"A/200",
+         "min":0,
+         "max":1.275
+      },
+      "obd2_o2sensorV_B1S2":{
+         "label":"O2 B1S2",
+         "unit":"V",
+         "mode":"01",
+         "pid":"15",
+         "response_bytes":2,
+         "expression":"A/200",
+         "min":0,
+         "max":1.275
+      },
+      "obd2_o2sensorV_B2S1":{
+         "label":"O2 B2S1",
+         "unit":"V",
+         "mode":"01",
+         "pid":"18",
+         "response_bytes":2,
+         "expression":"A/200",
+         "min":0,
+         "max":1.275
+      },
+      "obd2_o2sensorV_B2S2":{
+         "label":"O2 B2S2",
+         "unit":"V",
+         "mode":"01",
+         "pid":"19",
+         "response_bytes":2,
+         "expression":"A/200",
+         "min":0,
+         "max":1.275
+      },
+      "obd2_o2sensor_B1S1_WR_V":{
+         "label":"O2 Sensor B1S1 (WR) Volt",
+         "unit":"V",
+         "mode":"01",
+         "pid":"24",
+         "response_bytes":4,
+         "expression":"(D*256 + C) * 8 / 65536",
+         "min":0,
+         "max":8,
+         "exPlatforms":{
+            "vinli": "O2S_1A_VOLTAGE"
+         }
+      },
+      "obd2_o2sensor_B1S1_WR_Ratio":{
+         "label":"O2 Sensor B1S1 (WR) Eq. Ratio",
+         "unit":"",
+         "mode":"01",
+         "pid":"24",
+         "response_bytes":4,
+         "expression":"(B*256 + A) * 2 / 65536",
+         "min":0,
+         "max":2,
+         "exPlatforms":{
+            "vinli": "O2S_1A_EQUIVALENCE_RATIO"
+         }
+      },
+      "obd2_o2sensor_B1S2_WR_V":{
+         "label":"O2 Sensor B1S2 (WR) Volt",
+         "unit":"V",
+         "mode":"01",
+         "pid":"25",
+         "response_bytes":4,
+         "expression":"(D*256 + C) * 8 / 65536",
+         "min":0,
+         "max":8,
+         "exPlatforms":{
+            "vinli": "O2S_1B_VOLTAGE"
+         }
+      },
+      "obd2_o2sensor_B1S2_WR_Ratio":{
+         "label":"O2 Sensor B1S2 (WR) Eq. Ratio",
+         "unit":"",
+         "mode":"01",
+         "pid":"25",
+         "response_bytes":4,
+         "expression":"(B*256 + A) * 2 / 65536",
+         "min":0,
+         "max":2,
+         "exPlatforms":{
+            "vinli": "O2S_1B_EQUIVALENCE_RATIO"
+         }
+      },
+      "obd2_o2sensor_B1S3_WR_V":{
+         "label":"O2 Sensor B1S3 (WR) Volt",
+         "unit":"V",
+         "mode":"01",
+         "pid":"26",
+         "response_bytes":4,
+         "expression":"(D*256 + C) * 8 / 65536",
+         "min":0,
+         "max":8,
+         "exPlatforms":{
+            "vinli": "O2S_1C_VOLTAGE"
+         }
+      },
+      "obd2_o2sensor_B1S3_WR_Ratio":{
+         "label":"O2 Sensor B1S3 (WR) Eq. Ratio",
+         "unit":"",
+         "mode":"01",
+         "pid":"26",
+         "response_bytes":4,
+         "expression":"(B*256 + A) * 2 / 65536",
+         "min":0,
+         "max":2,
+         "exPlatforms":{
+            "vinli": "O2S_1C_EQUIVALENCE_RATIO"
+         }
+      },
+      "obd2_o2sensor_B1S4_WR_V":{
+         "label":"O2 Sensor B1S4 (WR) Volt",
+         "unit":"V",
+         "mode":"01",
+         "pid":"27",
+         "response_bytes":4,
+         "expression":"(D*256 + C) * 8 / 65536",
+         "min":0,
+         "max":8,
+         "exPlatforms":{
+            "vinli": "O2S_1D_VOLTAGE"
+         }
+      },
+      "obd2_o2sensor_B1S4_WR_Ratio":{
+         "label":"O2 Sensor B1S4 (WR) Eq. Ratio",
+         "unit":"",
+         "mode":"01",
+         "pid":"27",
+         "response_bytes":4,
+         "expression":"(B*256 + A) * 2 / 65536",
+         "min":0,
+         "max":2,
+         "exPlatforms":{
+            "vinli": "O2S_1D_EQUIVALENCE_RATIO"
+         }
+      },
+      "obd2_o2sensor_B2S1_WR_V":{
+         "label":"O2 Sensor B2S1 (WR) Volt",
+         "unit":"V",
+         "mode":"01",
+         "pid":"28",
+         "response_bytes":4,
+         "expression":"(D*256 + C) * 8 / 65536",
+         "min":0,
+         "max":8,
+         "exPlatforms":{
+            "vinli": "O2S_2A_VOLTAGE"
+         }
+      },
+      "obd2_o2sensor_B2S1_WR_Ratio":{
+         "label":"O2 Sensor B2S1 (WR) Eq. Ratio",
+         "unit":"",
+         "mode":"01",
+         "pid":"28",
+         "response_bytes":4,
+         "expression":"(B*256 + A) * 2 / 65536",
+         "min":0,
+         "max":2,
+         "exPlatforms":{
+            "vinli": "O2S_2A_EQUIVALENCE_RATIO"
+         }
+      },
+      "obd2_o2sensor_B2S2_WR_V":{
+         "label":"O2 Sensor B2S2 (WR) Volt",
+         "unit":"V",
+         "mode":"01",
+         "pid":"29",
+         "response_bytes":4,
+         "expression":"(D*256 + C) * 8 / 65536",
+         "min":0,
+         "max":8,
+         "exPlatforms":{
+            "vinli": "O2S_2B_VOLTAGE"
+         }
+      },
+      "obd2_o2sensor_B2S2_WR_Ratio":{
+         "label":"O2 Sensor B2S2 (WR) Eq. Ratio",
+         "unit":"",
+         "mode":"01",
+         "pid":"29",
+         "response_bytes":4,
+         "expression":"(B*256 + A) * 2 / 65536",
+         "min":0,
+         "max":2,
+         "exPlatforms":{
+            "vinli": "O2S_2B_EQUIVALENCE_RATIO"
+         }
+      },
+      "obd2_o2sensor_B2S3_WR_V":{
+         "label":"O2 Sensor B2S3 (WR) Volt",
+         "unit":"V",
+         "mode":"01",
+         "pid":"2A",
+         "response_bytes":4,
+         "expression":"(D*256 + C) * 8 / 65536",
+         "min":0,
+         "max":8,
+         "exPlatforms":{
+            "vinli": "O2S_2C_VOLTAGE"
+         }
+      },
+      "obd2_o2sensor_B2S3_WR_Ratio":{
+         "label":"O2 Sensor B2S3 (WR) Eq. Ratio",
+         "unit":"",
+         "mode":"01",
+         "pid":"2A",
+         "response_bytes":4,
+         "expression":"(B*256 + A) * 2 / 65536",
+         "min":0,
+         "max":2,
+         "exPlatforms":{
+            "vinli": "O2S_2C_EQUIVALENCE_RATIO"
+         }
+      },
+      "obd2_o2sensor_B2S4_WR_V":{
+         "label":"O2 Sensor B2S4 (WR) Volt",
+         "unit":"V",
+         "mode":"01",
+         "pid":"2B",
+         "response_bytes":4,
+         "expression":"(D*256 + C) * 8 / 65536",
+         "min":0,
+         "max":8,
+         "exPlatforms":{
+            "vinli": "O2S_2D_VOLTAGE"
+         }
+      },
+      "obd2_o2sensor_B2S4_WR_Ratio":{
+         "label":"O2 Sensor B2S4 (WR) Eq. Ratio",
+         "unit":"",
+         "mode":"01",
+         "pid":"2B",
+         "response_bytes":4,
+         "expression":"(B*256 + A) * 2 / 65536",
+         "min":0,
+         "max":2,
+         "exPlatforms":{
+            "vinli": "O2S_2D_EQUIVALENCE_RATIO"
+         }
+      },
+      "obd2_engine_run_time_since_start":{
+         "label":"Время работы двигателя с начала",
+         "unit":"s",
+         "mode":"01",
+         "pid":"1F",
+         "response_bytes":2,
+         "expression":"(B*256)+A",
+         "min":0,
+         "max":65535,
+         "exPlatforms":{
+            "vinli": "RUNTIME_SINCE_ENGINE_START"
+         }
+      },
+      "obd2_fuel_level_input":{
+         "label":"Уровень топлива Входной",
+         "unit":"%",
+         "mode":"01",
+         "pid":"2F",
+         "response_bytes":1,
+         "expression":"A*100/255",
+         "min":0,
+         "max":100,
+         "exPlatforms":{
+            "vinli": "FUEL_LEVEL_INPUT"
+         }
+      },
+      "obd2_distance_traveled_since_codes_cleared":{
+         "label":"Дистанция пройденная после очистки кодов",
+         "unit":"км",
+         "mode":"01",
+         "pid":"31",
+         "response_bytes":2,
+         "expression":"(B*256)+A",
+         "min":0,
+         "max":65535
+      },
+      "obd2_accel_pedal_pos_D":{
+         "label":"Положения педали акселератора D",
+         "unit":"%",
+         "mode":"01",
+         "pid":"49",
+         "response_bytes":1,
+         "expression":"A*100/250",
+         "min":0,
+         "max":100
+      },
+      "obd2_accel_pedal_pos_E":{
+         "label":"Положения педали акселератора E",
+         "unit":"%",
+         "mode":"01",
+         "pid":"4A",
+         "response_bytes":1,
+         "expression":"A*100/250",
+         "min":0,
+         "max":100
+      },
+      "obd2_accel_pedal_pos_F":{
+         "label":"Положения педали акселератора F",
+         "unit":"%",
+         "mode":"01",
+         "pid":"4B",
+         "response_bytes":1,
+         "expression":"A*100/250",
+         "min":0,
+         "max":100
+      },
+      "obd2_fuel_type":{
+         "label":"Тип топлива",
+         "unit":"",
+         "mode":"01",
+         "pid":"51",
+         "response_bytes":1,
+         "expression":"A",
+         "min":0,
+         "max":255
+      },
+      "obd2_ethanol_fuel_percentage":{
+         "label":"Этанол топлива в процентах",
+         "unit":"%",
+         "mode":"01",
+         "pid":"52",
+         "response_bytes":1,
+         "expression":"A*100/255",
+         "min":0,
+         "max":100
+      },
+      "obd2_fuel_rail_pressure_abs":{
+         "label":"Абсолютное Абсолютное давление уровня топлива",
+         "unit":"кПа",
+         "mode":"01",
+         "pid":"59",
+         "response_bytes":2,
+         "expression":"((B*256)+A) * 10",
+         "min":0,
+         "max":655350
+      },
+      "obd2_accelerator_pedal_position_relative":{
+         "label":"Относительная Относительное Положение педали акселератора",
+         "unit":"%",
+         "mode":"01",
+         "pid":"5A",
+         "response_bytes":1,
+         "expression":"A*100/255",
+         "min":0,
+         "max":100
+      },
+      "obd2_hybrid_battery_remaining_life":{
+         "label":"Гибридная батарея Остаточный ресурс",
+         "unit":"%",
+         "mode":"01",
+         "pid":"5B",
+         "response_bytes":1,
+         "expression":"A*100/255",
+         "min":0,
+         "max":100
+      },
+      "obd2_engine_oil_temperature":{
+         "label":"Температура моторного масла",
+         "unit":"C",
+         "mode":"01",
+         "pid":"5C",
+         "response_bytes":1,
+         "expression":"A-40",
+         "min":-40,
+         "max":210
+      },
+      "obd2_fuelrate":{
+         "label":"Уровень топлива",
+         "unit":"л/ч",
+         "mode":"01",
+         "pid":"5E",
+         "response_bytes":2,
+         "expression":"(B*256 + A)*0.05",
+         "min":0,
+         "max":10
+      },
+      "obd2_timestamp":{
+         "label":"Отметка От автомобиля",
+         "unit":"мс",
+         "mode":"01",
+         "pid":"70",
+         "response_bytes":4,
+         "expression":"(C*256^2+B*256 + A)",
+         "min":0,
+         "max":3600000
+      }
+   },
+
+   "logging":{
+      "parameters":[
+         "timestamp",
+         "obd2_speed",
+         "obd2_engine_rpm",
+         "obd2_MAF",
+         "obd2_o2sensorV_B1S1",
+         "obd2_o2sensorV_B1S2",
+         "obd2_o2sensorV_B2S1",
+         "obd2_o2sensorV_B2S2",
+         "obd2_accel_pedal_pos_D",
+         "obd2_accel_pedal_pos_E",
+         "obd2_accel_pedal_pos_F",
+         "gps_long",
+         "gps_lad",
+         "gps_alt"
+      ]
+   },
+
+
+   "siddhi":{
+
+      "stream_definitions":[
+         "define stream FuelRateStream ( obd2_fuelrate float )",
+         "define stream SpeedStream ( obd2_speed int )"
+      ],
+
+      "queries":[
+         "from  FuelRateStream [ obd2_fuelrate >= 4 ] insert into HighFuelConsumption obd2_fuelrate;",
+         "from  SpeedStream [ obd2_speed >= 30 ] insert into HighSpeedStream obd2_speed;"
+      ],
+
+      "output_streams":[
+         "HighSpeedStream",
+         "HighFuelConsumption"
+      ],
+
+      "output_stream_callbacks":{
+         "HighSpeedStream":[
+            {
+               "callback_name":"DefaultLogging",
+               "parameters":{}
+            }
+         ],
+
+         "HighFuelConsumption":[
+            {
+               "callback_name":"DefaultLogging",
+               "parameters":{}
+            },
+            {
+               "callback_name":"JSONFormatterSender",
+               "parameters":{"destination_urls":[]}
+            }
+         ]
+      }
+   }
+}

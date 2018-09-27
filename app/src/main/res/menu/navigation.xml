@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+
+    >
+
+    <item
+        android:id="@+id/navigation_graph"
+        android:icon="@drawable/ic_chart"
+        tools:ignore="MenuTitle" />
+    <item
+        android:id="@+id/navigation_map"
+        android:icon="@drawable/nav_map"
+        tools:ignore="MenuTitle" />
+    <item
+        android:id="@+id/navigation_home"
+        android:icon="@drawable/nav_home"
+        tools:ignore="MenuTitle" />
+    <item
+        android:id="@+id/navigation_tagger"
+        android:icon="@drawable/nav_tagger"
+        tools:ignore="MenuTitle" />
+    <item
+        android:id="@+id/navigation_settings"
+        android:icon="@drawable/nav_setting"
+        tools:ignore="MenuTitle" />
+
+</menu>
