@@ -54,6 +54,7 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.pathsense.android.sdk.location.PathsenseLocationProviderApi;
 import com.vatichub.obd2.OBD2CoreConfiguration;
 import com.vatichub.obd2.OBD2CoreConstants;
 import com.vatichub.obd2.OBD2EventManager;
@@ -219,6 +220,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         dbHandler = new DatabaseHandler(getApplicationContext());
 //        dbHandler.saveToDataBaseNew(getApplicationContext());
         checkAndRequestPermissions();
+
+        PathsenseLocationProviderApi api = PathsenseLocationProviderApi.getInstance(context);
+        api.requestInVehicleLocationUpdates(PathsenseInVehicleReceiver.class);
+        api.requestActivityUpdates(PathsenseInVehicleReceiver.class);
 
     }
 
