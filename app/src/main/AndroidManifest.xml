@@ -56,6 +56,17 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
+        <meta-data
+            android:name="com.pathsense.android.sdk.CLIENT_ID"
+            android:value="giE4HvhlfZpOdfkJ7UwPsbkJGUu9zXcbhzSZDn7y" />
+
+        <meta-data
+            android:name="com.pathsense.android.sdk.API_KEY"
+            android:value="sGKWLeaadI2zNuxXEU8mb7eSzJa8gYXt2649dZDs" />
+
+        <receiver
+            android:name=".PathsenseInVehicleReceiver" />
+
     </application>
 
 </manifest>

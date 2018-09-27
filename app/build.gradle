@@ -33,6 +33,9 @@ android {
 allprojects {
     repositories {
         maven { url "https://jitpack.io" }
+        flatDir {
+            dirs 'libs'
+        }
     }
 }
 
@@ -52,4 +55,5 @@ dependencies {
     compile project(':obd2core')
 
     compile 'com.couchbase.lite:couchbase-lite-android:1.4.1'
+    compile(name:'pathsense-android-sdk-location-bundle-release-3.1.0.6', ext:'aar')
 }
