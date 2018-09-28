@@ -63,7 +63,7 @@ public class DatabaseHandler {
         // The properties that will be saved on the document
         Map<String, Object> properties = new HashMap<String, Object>();
 
-//        Log.d("DATA====",SensorData.getMacceX());
+        Log.d("DATA====",SensorData.getMacceX());
         properties.put("journeyID", SensorData.getJourneyId());
         properties.put("imei", SensorData.getDeviceId());
         properties.put("lat", SensorData.getMlat());

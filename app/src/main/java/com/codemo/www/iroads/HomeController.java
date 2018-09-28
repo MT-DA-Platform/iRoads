@@ -21,11 +21,4 @@ public class HomeController {
         HomeFragment.setMainActivity(activity);
     }
 
-    public static void startSaving(){
-        HomeFragment.startSaving();
-    }
-
-    public static void stopSaving(){
-        HomeFragment.stopSaving();
-    }
 }

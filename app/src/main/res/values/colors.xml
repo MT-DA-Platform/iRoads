@@ -23,4 +23,6 @@
     <color name="colorDisabledThumb">#eaeaea</color>
     <color name="colorDisabledTrack">#ededed</color>
     <color name="colorPothole">#ca833c</color>
+    <color name="colorWhite">#ffffff</color>
+    <color name="colorGrey">#707070</color>
     </resources>
