@@ -94,11 +94,11 @@ public class SettingsFragment extends Fragment {
 //                Log.d(TAG, "settings auto save changed");
                 if(b){
                     Log.d(TAG, "settings auto save enabled");
-                    HomeFragment.setAutoSaveON(true);
+                    mainActivity.setAutoSaveON(true);
                     saving.getThumbDrawable().setColorFilter(ContextCompat.getColor(getMainActivity().getApplicationContext(), R.color.colorPrimary), PorterDuff.Mode.MULTIPLY);
                 }else{
                     Log.d(TAG, "settings auto save disabled");
-                    HomeFragment.setAutoSaveON(false);
+                    mainActivity.setAutoSaveON(false);
                     saving.getThumbDrawable().setColorFilter(ContextCompat.getColor(getMainActivity().getApplicationContext(), R.color.colorDisabledThumb), PorterDuff.Mode.MULTIPLY);
                 }
             }
@@ -133,7 +133,7 @@ public class SettingsFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        NavigationHandler.navigateTo("homeFragment");
+        NavigationHandler.navigateTo("mapFragment");
     }
 
     public static MainActivity getMainActivity() {

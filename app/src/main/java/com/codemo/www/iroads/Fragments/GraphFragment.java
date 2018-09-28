@@ -75,7 +75,7 @@ public class GraphFragment extends Fragment {
 
     public static void setFuelChart(LineChart fuelChart) {
         GraphFragment.fuelChart = fuelChart;
-        startTimer();
+//        startTimer();
     }
     public static void startTimer(){
         Handler handler = new Handler();

@@ -1,5 +1,7 @@
 package com.codemo.www.iroads;
 
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -38,6 +40,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.codemo.www.iroads.Database.DatabaseHandler;
@@ -67,7 +71,11 @@ import com.vatichub.obd2.realtime.OBD2SiddhiAgentManager;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -125,6 +133,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private DatabaseHandler dbHandler;
     private Runnable handlerTask;
     private static boolean replicationStopped = true;
+    private static ProgressBar spinnerObd;
+    private static ProgressBar spinnerSave;
+    private static boolean autoSaveON = true;
+    private static ImageButton saveBtn;
+    private static ImageButton bConnectBtn;
+    private static MainActivity activity;
+    private static int counter;
     private static final String TAG = "MainActivity";
 
     @Override
@@ -138,19 +153,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                Snackbar.make(view, "Visit iroads.projects.mrt.ac.lk for more info.", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         });
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        MainActivity.activity = this;
         manager = getSupportFragmentManager();
         transaction = manager.beginTransaction();
 
@@ -162,7 +177,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         transaction.add(R.id.contentLayout, new GraphFragment(), "graphFragment");
         transaction.add(R.id.contentLayout, new HomeFragment(), "homeFragment");
         transaction.add(R.id.contentLayout, new SettingsFragment(), "settingsFragment");
-        transaction.add(R.id.contentLayout, new TaggerFragment(), "taggerFragment");
         transaction.commit();
 //
         GMapFragment.setActivity(this);
@@ -216,7 +230,40 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         SettingsController.setMainActivity(this);
         gconfigs.updateQueryPIDsList();
 
+        saveBtn = (ImageButton) findViewById(R.id.saveBtn);
+        saveBtn.setColorFilter(ContextCompat.getColor(activity.getApplicationContext(), R.color.colorWhite));
+        saveBtn.setOnClickListener(new ImageButton.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                if(isAutoSaveON()){
+                    Toast.makeText( getApplicationContext() ,"Auto Save is currently enabled", Toast.LENGTH_SHORT).show();
+                }else{
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+                    dbHandler.startReplication();
+                    MainActivity.setReplicationStopped(false);
+                    startSaving();
+                    Toast.makeText( getApplicationContext(),"Sync up Started", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
 
+        spinnerObd=(ProgressBar) findViewById(R.id.progressBarLoadingObd);
+        spinnerObd.getIndeterminateDrawable().setColorFilter(	ContextCompat.getColor(getApplicationContext(), R.color.colorWhite), android.graphics.PorterDuff.Mode.MULTIPLY);
+        spinnerObd.setVisibility(View.GONE);
+        spinnerSave=(ProgressBar) findViewById(R.id.progressBarLoadingSave);
+        spinnerSave.getIndeterminateDrawable().setColorFilter(	ContextCompat.getColor(getApplicationContext(), R.color.colorWhite), android.graphics.PorterDuff.Mode.MULTIPLY);
+        spinnerSave.setVisibility(View.GONE);
+
+        bConnectBtn = (ImageButton) findViewById(R.id.obdBtn);
+        bConnectBtn.setColorFilter(ContextCompat.getColor(activity.getApplicationContext(), R.color.colorWhite));
+        bConnectBtn.setOnClickListener(new ImageButton.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                spinnerObd.setVisibility(View.VISIBLE);
+                onConnectBtn();
+
+            }
+        });
         dbHandler = new DatabaseHandler(getApplicationContext());
 //        dbHandler.saveToDataBaseNew(getApplicationContext());
         checkAndRequestPermissions();
@@ -227,6 +274,33 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        if (id == R.id.nav_home) {
+            // Handle the camera action
+            NavigationHandler.navigateTo("mapFragment");
+        } else if (id == R.id.nav_chart) {
+            NavigationHandler.navigateTo("graphFragment");
+        } else if (id == R.id.nav_obd) {
+        NavigationHandler.navigateTo("homeFragment");
+        } else if (id == R.id.nav_settings) {
+            NavigationHandler.navigateTo("settingsFragment");
+        }
+//        } else if (id == R.id.nav_share) {
+//
+//        } else if (id == R.id.nav_send) {
+//
+//        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
     public void startTimer(){
         Handler handler = new Handler();
         handlerTask = new Runnable()
@@ -234,26 +308,43 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void run() {
                 // handle automatic saving when journey started
-                if(GraphFragment.isStarted()) {
-                    if (HomeFragment.isAutoSaveON()) {
-                        if (isReplicationStopped()) {
+//                if(GraphFragment.isStarted()) {
+                if (isAutoSaveON()) {
+//                    Log.d(TAG,"--------------- auto save is ON--------- /// ");
+                    if (isReplicationStopped()) {
+                        counter ++;
+                        if(counter > 8){
+//                            Log.d(TAG,"--------------- replication is stopped --------- /// ");
                             dbHandler.startReplication();
-                            HomeFragment.startSaving();
+                            startSaving();
                             setReplicationStopped(false);
-                        } else {
-                            // do nothing since current sync up is not over
+                            counter = 0;
                         }
+                    } else {
+                        Log.d(TAG,"--------------- replicating ............. --------- /// ");
                     }
                 }
+//                }
                 // handle ui when sync up is over
                 if(isReplicationStopped()){
-                    HomeController.stopSaving();
+                    stopSaving();
 //                    Log.d(TAG,"--------------- Saving stopped --------- /// ");
                 }
-                handler.postDelayed(handlerTask, 10000);
+                handler.postDelayed(handlerTask, 5000);
             }
         };
         handlerTask.run();
+    }
+
+    public boolean isInternetAvailable() {
+//        ConnectivityManager cm =
+//                (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+//
+//        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+//        boolean isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting();
+//        return  isConnected;
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        return cm.getActiveNetworkInfo() != null;
     }
 
     @Override
@@ -279,6 +370,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //                Double.toString(location.getLongitude());
         HomeController.updateLocation(location);
         MobileSensors.updateLocation(location);
+        GMapFragment.updateLocation(location);
 //        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
         // You can now create a LatLng Object for use with maps
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
@@ -879,35 +971,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
+//        if (id == R.id.action_settings) {
+//            return true;
+//        }
 
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
+    public static void startSaving(){
+        spinnerSave.setVisibility(View.VISIBLE);
+//        saveBtn.setColorFilter(ContextCompat.getColor(activity.getApplicationContext(), R.color.colorIconBlack));
+        saveBtn.setEnabled(false);
+    }
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+    public static void stopSaving(){
+        spinnerSave.setVisibility(View.GONE);
+//        saveBtn.setColorFilter(ContextCompat.getColor(activity.getApplicationContext(), R.color.colorWhite));
+        saveBtn.setEnabled(true);
+    }
 
-        } else if (id == R.id.nav_slideshow) {
+    public static boolean isAutoSaveON() {
+        return autoSaveON;
+    }
 
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
+    public static void setAutoSaveON(boolean autoSaveON) {
+        MainActivity.autoSaveON = autoSaveON;
     }
 }
