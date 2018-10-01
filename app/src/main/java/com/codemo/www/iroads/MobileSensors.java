@@ -23,6 +23,7 @@ public class MobileSensors implements SensorEventListener {
     private SensorManager sensorManager;
     private Sensor accelerometer;
     private Sensor magnetometer;
+    private Sensor gyroscope;
 
     private static float currentMagneticX;
     private static float currentMagneticY;
@@ -67,6 +68,26 @@ public class MobileSensors implements SensorEventListener {
         this.currentAccelerationZ = currentAccelerationZ;
     }
 
+    private static float currentGyroX;
+    private static float currentGyroY;
+    private static float currentGyroZ;
+
+    public static float getCurrentGyroX() {
+        return currentGyroX;
+    }
+    public static float getCurrentGyroY() {
+        return currentGyroY;
+    }
+    public static float getCurrentGyroZ() {
+        return currentGyroZ;
+    }
+    private void setCurrentGyroValues(float currentGyroX,float currentGyroY,float currentGyroZ) {
+        this.currentGyroX = currentGyroX;
+        this.currentGyroY = currentGyroY;
+        this.currentGyroZ = currentGyroZ;
+        Log.d(TAG+"+gyro","\nGyro X:"+currentGyroX+"\nGyro Y:"+currentGyroY+"\nGyro Z:"+currentGyroZ);
+    }
+
     private static double lon; // keeps longitude of the vehicle
     private static double lat; // keeps latitude of the vehicle
     private static double alt; // keeps altitude of the vehicle
@@ -101,9 +122,6 @@ public class MobileSensors implements SensorEventListener {
                 previousLocation.getAltitude() != alt){
             previousLocation = location;
         }
-//        Log.d("UpdateLoc",lon+","+lat+","+NumberFormat.getInstance().format(lon)+","+NumberFormat.getInstance().format(lat));
-//        SensorData.setMlon(NumberFormat.getInstance().format(lon));
-//        SensorData.setMlat(NumberFormat.getInstance().format(lat));
    }
 
     public static double gpsSpeed; // keeps GPS speed of the vehicle
@@ -119,19 +137,29 @@ public class MobileSensors implements SensorEventListener {
     public MobileSensors(MainActivity mainActivity) {
         // Required empty public constructor
         sensorManager = (SensorManager)  mainActivity.getSystemService(Context.SENSOR_SERVICE);
+
         accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        magnetometer = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+        gyroscope = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
+
         if(accelerometer != null){
             sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_GAME);
 
         }else{
             Log.d(TAG, "Accelerometer not available");
         }
-        magnetometer = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+
         if(magnetometer != null){
             sensorManager.registerListener(this, magnetometer, SensorManager.SENSOR_DELAY_GAME);
 
         }else{
             Log.d(TAG, "Magnetometer not available");
+        }
+
+        if (gyroscope !=null){
+            sensorManager.registerListener(this,gyroscope,SensorManager.SENSOR_DELAY_GAME);
+        }else {
+            Log.d(TAG,"Gyroscope not available");
         }
     }
 
@@ -152,9 +180,18 @@ public class MobileSensors implements SensorEventListener {
 
 
         }else if(sensorType == Sensor.TYPE_MAGNETIC_FIELD){
+            SensorData.setMagnetX((Float.toString(sensorEvent.values[0])));
+            SensorData.setMagnetY((Float.toString(sensorEvent.values[1])));
+            SensorData.setMagnetZ((Float.toString(sensorEvent.values[2])));
             setCurrentMagneticValues(sensorEvent.values[0],sensorEvent.values[1],sensorEvent.values[2]);
         }
 
+        else if (sensorType == Sensor.TYPE_GYROSCOPE){
+            SensorData.setGyroX(Float.toString(sensorEvent.values[0]));
+            SensorData.setGyroY(Float.toString(sensorEvent.values[1]));
+            SensorData.setGyroZ(Float.toString(sensorEvent.values[2]));
+            setCurrentGyroValues(sensorEvent.values[0],sensorEvent.values[1],sensorEvent.values[2]);
+        }
 
         /**
          *  all the data processing on sensor values are done in here

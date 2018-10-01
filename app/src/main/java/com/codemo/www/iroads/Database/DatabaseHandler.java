@@ -44,7 +44,7 @@ public class DatabaseHandler {
     private static Database database;
     private String mSyncGatewayUrl = "http://iroads.projects.mrt.ac.lk:4984/db/";
     private static final String TAG = "DatabaseHandler";
-    private static String jid;
+
 
     public DatabaseHandler(Context context){
         try {
@@ -58,7 +58,7 @@ public class DatabaseHandler {
         }
 
     }
-//    private static int count = 0;
+
     public static void saveToDatabase(){
         // The properties that will be saved on the document
         Map<String, Object> properties = new HashMap<String, Object>();
@@ -77,6 +77,12 @@ public class DatabaseHandler {
         properties.put("acceX_raw", SensorData.getMacceX());
         properties.put("acceY_raw", SensorData.getMacceY());
         properties.put("acceZ_raw", SensorData.getMacceZ());
+        properties.put("magnetX", SensorData.getMagnetX());
+        properties.put("magnetY", SensorData.getMagnetY());
+        properties.put("magnetZ", SensorData.getMagnetZ());
+        properties.put("gyroX", SensorData.getGyroX());
+        properties.put("gyroY", SensorData.getGyroY());
+        properties.put("gyroZ", SensorData.getGyroZ());
         properties.put("time",System.currentTimeMillis());
         properties.put("dataType", "data_item");
 
@@ -90,13 +96,6 @@ public class DatabaseHandler {
         }
     }
 
-    public static String getJid() {
-        return jid;
-    }
-
-    public static void setJid(String jid) {
-        DatabaseHandler.jid = jid;
-    }
 
     // Replication
     public void startReplication() {
@@ -113,23 +112,16 @@ public class DatabaseHandler {
                     }
                 }
             });
-//            push.setContinuous(true);
             push.start();
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
-
-
-
-
     }
 
     public static void printDocCount(){
         Log.d("DOC___COUNT",database.getDocumentCount()+"");
 
     }
-
-
 
     public Manager getManager() {
         return manager;
@@ -139,123 +131,21 @@ public class DatabaseHandler {
         return database;
     }
 
-    public static void saveJourneyName(String name){
+    public static void saveJourneyName(){
         // The properties that will be saved on the document
         Map<String, Object> properties = new HashMap<String, Object>();
 
         properties.put("journeyID", SensorData.getJourneyId());
-        properties.put("journeyName", name);
-        properties.put("dataType", "a");
-        setJid(name);
+        properties.put("journeyName", "latest");
+        properties.put("startLat", SensorData.getMlat());
+        properties.put("startLon", SensorData.getMlon());
+        properties.put("dataType", "trip_names");
         // Create a new document
         Document document = database.createDocument();
         // Save the document to the database
         try {
             document.putProperties(properties);
         } catch (CouchbaseLiteException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public String createString(){
-//        jid=null;
-// Let's find the documents that have conflicts so we can resolve them:
-        StringBuilder text = new StringBuilder();
-        Query query = database.createAllDocumentsQuery();
-        query.setAllDocsMode(Query.AllDocsMode.ALL_DOCS);
-        QueryEnumerator result = null;
-        try {
-            result = query.run();
-        } catch (CouchbaseLiteException e) {
-            e.printStackTrace();
-        }
-        for (Iterator<QueryRow> it = result; it.hasNext(); ) {
-            QueryRow row = it.next();
-            if(row !=null){
-                if(row.getDocument().getProperty("acceX")!=null){
-//                    jid=row.getDocument().getProperty("journeyID").toString();
-//                    text.append(row.getDocument().getProperty("acceX").toString());
-//                    text.append(row.getDocument().getProperty("acceX").toString());
-                    text.append(row.getDocument().getProperties().toString());
-                    text.append(",");
-//                    Log.d("ROW",row.getDocument().getProperties().toString());
-                }
-//
-            }
-
-//            if (row.getConflictingRevisions().size() > 0) {
-////                Log.w("MYAPP", "Conflict in document: %s", row.getDocumentId());
-//                beginConflictResolution(row.getDocument());
-//            }
-        }
-        Log.d("Dta=========",text.toString());
-        try {
-            database.delete();
-        } catch (CouchbaseLiteException e) {
-            e.printStackTrace();
-        }
-        return text.toString();
-    }
-
-    public static void writeToFile(String text)
-    {
-        Log.d("DJourneyID=====",getJid());
-
-        File logFile = new File("sdcard/log"+getJid()+".txt");
-        if (!logFile.exists())
-        {
-            try
-            {
-                logFile.createNewFile();
-            }
-            catch (IOException e)
-            {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        }
-        try
-        {
-            //BufferedWriter for performance, true to set append to file flag
-            BufferedWriter buf = new BufferedWriter(new FileWriter(logFile, true));
-            buf.append(text);
-            buf.newLine();
-            buf.close();
-        }
-        catch (IOException e)
-        {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-    }
-
-
-    public static void readFromFile(String text)
-    {
-
-//        File logFile = new File("sdcard/iroads.json");
-//        if (!logFile.exists())
-//        {
-//            try
-//            {
-//                logFile.createNewFile();
-//            }
-//            catch (IOException e)
-//            {
-//                // TODO Auto-generated catch block
-//                e.printStackTrace();
-//            }
-//        }
-        try
-        {
-            //BufferedWriter for performance, true to set append to file flag
-            BufferedReader buf = new BufferedReader(new FileReader("sdcard/iroads.json"));
-            JSONArray jsonArray = new JSONArray();
-            buf.close();
-        }
-        catch (IOException e)
-        {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
