@@ -45,6 +45,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.codemo.www.iroads.Database.DatabaseHandler;
@@ -153,22 +154,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Visit iroads.projects.mrt.ac.lk for more info.", Snackbar.LENGTH_LONG)
-                        .setAction("click here", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                Intent browserIntent = new
-                                        Intent(Intent.ACTION_VIEW,
-                                        Uri.parse(getString(R.string.page_address)));
-                                startActivity(browserIntent);
-                            }
-                        }).show();
-            }
-        });
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -285,8 +270,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         api.requestInVehicleLocationUpdates(PathsenseInVehicleReceiver.class);
         api.requestActivityUpdates(PathsenseInVehicleReceiver.class);
 
+//        TextView webLink = (TextView) findViewById(R.id.webLink);
+//        webLink.setOnClickListener(new TextView.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent browserIntent = new
+//                        Intent(Intent.ACTION_VIEW,
+//                        Uri.parse(getString(R.string.page_address)));
+//                startActivity(browserIntent);
+//            }
+//        });
 
     }
+
+
 
     @Override
     protected void onDestroy() {
@@ -399,7 +396,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void onLocationChanged(Location location) {
         HomeController.updateLocation(location);
         MobileSensors.updateLocation(location);
-        GMapFragment.updateLocation(location);
     }
 
     private boolean checkLocation() {

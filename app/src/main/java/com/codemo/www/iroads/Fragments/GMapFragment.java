@@ -2,16 +2,22 @@ package com.codemo.www.iroads.Fragments;
 
 
 
+import android.content.Intent;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.codemo.www.iroads.Database.SensorData;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -50,6 +56,25 @@ public class GMapFragment extends Fragment implements OnMapReadyCallback {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_map, container, false);
+        FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
+        fab.setColorFilter(ContextCompat.getColor(activity.getApplicationContext(), R.color.colorWhite));
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                updateLocation();
+//                Snackbar.make(view, "Visit iroads.projects.mrt.ac.lk for more info.", Snackbar.LENGTH_LONG)
+//                        .setAction("click here", new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View view) {
+////                                Intent browserIntent = new
+////                                        Intent(Intent.ACTION_VIEW,
+////                                        Uri.parse(getString(R.string.page_address)));
+////                                startActivity(browserIntent);
+//
+//                            }
+//                        }).show();
+            }
+        });
         Log.d("rht","aaaaaaaaaaaaaaaaaaaa.....map fragment created....aaaaaaaaaaaaaaaaaaaaaa***");
         return  view;
 
@@ -71,20 +96,21 @@ public class GMapFragment extends Fragment implements OnMapReadyCallback {
         gmap = googleMap;
         Log.d("ssssssssssssssssssssss","sssssssssssssssssssssssssssssssssss");
         marker = null;
+        float zoomLevel = 7.0f;
         LatLng sri_lanka = new LatLng(7.241829, 80.7556483);
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(sri_lanka));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sri_lanka, zoomLevel));
 
     }
 
-    public static void updateLocation(Location location){
-        LatLng loc = new LatLng(location.getLatitude(), location.getLongitude());
-        float zoomLevel = 10.0f;
+    public static void updateLocation(){
+        LatLng loc = new LatLng(Double.parseDouble(SensorData.getMlat()), Double.parseDouble(SensorData.getMlon()));
+        float zoomLevel;
 
         if (marker == null) {
             marker = gmap.addMarker(new MarkerOptions()
                     .position(loc)
-                    .title("You are Here!"));
-//                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.nav_home)));
+                    .title("You are Here!")
+                    .icon(BitmapDescriptorFactory.fromResource(R.mipmap.marker)));
 //            marker.showInfoWindow();
         } else {
             marker.setPosition(loc);
