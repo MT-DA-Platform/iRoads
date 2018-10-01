@@ -2,9 +2,12 @@ package com.codemo.www.iroads;
 
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.telephony.TelephonyManager;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -140,6 +143,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private static ImageButton bConnectBtn;
     private static MainActivity activity;
     private static int counter;
+    private PathsenseLocationProviderApi api;
     private static final String TAG = "MainActivity";
 
     @Override
@@ -154,7 +158,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onClick(View view) {
                 Snackbar.make(view, "Visit iroads.projects.mrt.ac.lk for more info.", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                        .setAction("click here", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Intent browserIntent = new
+                                        Intent(Intent.ACTION_VIEW,
+                                        Uri.parse(getString(R.string.page_address)));
+                                startActivity(browserIntent);
+                            }
+                        }).show();
             }
         });
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -232,31 +244,31 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         saveBtn = (ImageButton) findViewById(R.id.saveBtn);
         saveBtn.setColorFilter(ContextCompat.getColor(activity.getApplicationContext(), R.color.colorWhite));
-        saveBtn.setOnClickListener(new ImageButton.OnClickListener(){
+        saveBtn.setOnClickListener(new ImageButton.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(isAutoSaveON()){
-                    Toast.makeText( getApplicationContext() ,"Auto Save is currently enabled", Toast.LENGTH_SHORT).show();
-                }else{
+                if (isAutoSaveON()) {
+                    Toast.makeText(getApplicationContext(), "Auto Save is currently enabled", Toast.LENGTH_SHORT).show();
+                } else {
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
                     dbHandler.startReplication();
                     MainActivity.setReplicationStopped(false);
                     startSaving();
-                    Toast.makeText( getApplicationContext(),"Sync up Started", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Sync up Started", Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
-        spinnerObd=(ProgressBar) findViewById(R.id.progressBarLoadingObd);
-        spinnerObd.getIndeterminateDrawable().setColorFilter(	ContextCompat.getColor(getApplicationContext(), R.color.colorWhite), android.graphics.PorterDuff.Mode.MULTIPLY);
+        spinnerObd = (ProgressBar) findViewById(R.id.progressBarLoadingObd);
+        spinnerObd.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.colorWhite), android.graphics.PorterDuff.Mode.MULTIPLY);
         spinnerObd.setVisibility(View.GONE);
-        spinnerSave=(ProgressBar) findViewById(R.id.progressBarLoadingSave);
-        spinnerSave.getIndeterminateDrawable().setColorFilter(	ContextCompat.getColor(getApplicationContext(), R.color.colorWhite), android.graphics.PorterDuff.Mode.MULTIPLY);
+        spinnerSave = (ProgressBar) findViewById(R.id.progressBarLoadingSave);
+        spinnerSave.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.colorWhite), android.graphics.PorterDuff.Mode.MULTIPLY);
         spinnerSave.setVisibility(View.GONE);
 
         bConnectBtn = (ImageButton) findViewById(R.id.obdBtn);
         bConnectBtn.setColorFilter(ContextCompat.getColor(activity.getApplicationContext(), R.color.colorWhite));
-        bConnectBtn.setOnClickListener(new ImageButton.OnClickListener(){
+        bConnectBtn.setOnClickListener(new ImageButton.OnClickListener() {
             @Override
             public void onClick(View view) {
                 spinnerObd.setVisibility(View.VISIBLE);
@@ -265,13 +277,37 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
         dbHandler = new DatabaseHandler(getApplicationContext());
-//        dbHandler.saveToDataBaseNew(getApplicationContext());
+
         checkAndRequestPermissions();
 
-        PathsenseLocationProviderApi api = PathsenseLocationProviderApi.getInstance(context);
+
+        api = PathsenseLocationProviderApi.getInstance(getApplicationContext());
         api.requestInVehicleLocationUpdates(PathsenseInVehicleReceiver.class);
         api.requestActivityUpdates(PathsenseInVehicleReceiver.class);
 
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        api.destroy();
+        super.onDestroy();
+    }
+
+    public void saveDeviceId() {
+        String serial = Build.SERIAL;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                return;
+            }
+            serial = Build.getSerial();
+        }
+
+        Log.i("TAG","android.os.Build.SERIAL: " + serial);
+        SensorData.setDeviceId(String.valueOf(Build.SERIAL.hashCode()));
+        Log.d(TAG,"--------------- DeviceId --------- /// "+ SensorData.getDeviceId());
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -309,7 +345,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void run() {
                 // handle automatic saving when journey started
 //                if(GraphFragment.isStarted()) {
-                if (isAutoSaveON()) {
+                if (isAutoSaveON() && isInternetAvailable()) {
+                    Log.d(TAG,"--------------- internet --------- /// "+isInternetAvailable());
 //                    Log.d(TAG,"--------------- auto save is ON--------- /// ");
                     if (isReplicationStopped()) {
                         counter ++;
@@ -337,15 +374,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public boolean isInternetAvailable() {
-//        ConnectivityManager cm =
-//                (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
-//
-//        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-//        boolean isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting();
-//        return  isConnected;
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         return cm.getActiveNetworkInfo() != null;
     }
+
+
 
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
@@ -354,7 +387,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
          * setting reorientation mechanism
          */
         SensorDataProcessor.setReorientation(ReorientationType.Nericel);
-
         new MobileSensors(this);
         startTimer();
     }
@@ -365,16 +397,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void onLocationChanged(Location location) {
-//        String msg = "Updated Location: " +
-//                Double.toString(location.getLatitude()) + "," +
-//                Double.toString(location.getLongitude());
         HomeController.updateLocation(location);
         MobileSensors.updateLocation(location);
         GMapFragment.updateLocation(location);
-//        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
-        // You can now create a LatLng Object for use with maps
-        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-
     }
 
     private boolean checkLocation() {
@@ -836,7 +861,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private boolean checkAndRequestPermissions() {
         int phonestate = ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_PHONE_STATE);
         int location = ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION);
-        int permissionLocation = ContextCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
+//        int permissionLocation = ContextCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
 
         List<String> listPermissionsNeeded = new ArrayList<>();
@@ -848,9 +873,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (location != PackageManager.PERMISSION_GRANTED) {
             listPermissionsNeeded.add(android.Manifest.permission.ACCESS_FINE_LOCATION);
         }
-        if (permissionLocation != PackageManager.PERMISSION_GRANTED) {
-            listPermissionsNeeded.add(android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        }
+//        if (permissionLocation != PackageManager.PERMISSION_GRANTED) {
+//            listPermissionsNeeded.add(android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
+//        }
         if (!listPermissionsNeeded.isEmpty()) {
             ActivityCompat.requestPermissions(this, listPermissionsNeeded.toArray(new String[listPermissionsNeeded.size()]), 1);
             return false;
@@ -871,27 +896,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                 perms.put(android.Manifest.permission.READ_PHONE_STATE, PackageManager.PERMISSION_GRANTED);
                 perms.put(android.Manifest.permission.ACCESS_FINE_LOCATION, PackageManager.PERMISSION_GRANTED);
-                perms.put(android.Manifest.permission.WRITE_EXTERNAL_STORAGE, PackageManager.PERMISSION_GRANTED);
+//                perms.put(android.Manifest.permission.WRITE_EXTERNAL_STORAGE, PackageManager.PERMISSION_GRANTED);
 
                 // Fill with actual results from user
                 if (grantResults.length > 0) {
                     for (int i = 0; i < permissions.length; i++)
                         perms.put(permissions[i], grantResults[i]);
                     // Check for both permissions
-                    if (perms.get(android.Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED
-                            && perms.get(android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-                            && perms.get(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+                    if (
+                            perms.get(android.Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED &&
+                             perms.get(android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+//                            && perms.get(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
                             ) {
-                        Log.d(TAG, "phone, storage & location services permission granted");
+                        Log.d(TAG, "phone & location services permission granted");
 
                         // here you can do your logic all Permission Success Call
 //                        moveToNxtScreen();
 
                     } else {
                         Log.d(TAG, "Some permissions are not granted ask again ");
-                        if (ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.READ_PHONE_STATE) ||
-                                ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.ACCESS_FINE_LOCATION) ||
-                                ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                        if (
+                                ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.READ_PHONE_STATE) ||
+                                ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
+//                              ||  ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        ){
                             showDialogOK("Some Permissions are required to use this application",
                                     new DialogInterface.OnClickListener() {
                                         @Override
@@ -914,7 +942,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
             }
         }
-
+        saveDeviceId();
     }
 
     private void showDialogOK(String message, DialogInterface.OnClickListener okListener) {

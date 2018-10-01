@@ -222,8 +222,6 @@ public class HomeFragment extends Fragment{
     public static  void updateLocation(Location loc){
         cuurentLoc = loc;
         Log.d(TAG,"--------------- Location changed --------- /// "+ loc.getLatitude()+ " "+loc.getLongitude());
-//        lat.setText("Latitude: "+ loc.getLatitude());
-//        lng.setText("Longitude: "+ loc.getLongitude());
         if(!obdDataAvailable){
             Double speed = SpeedCalculator.getSpeed(loc.getLatitude(), loc.getLongitude());
             MobileSensors.setGpsSpeed(speed);// updates vehicle speed using GPS
@@ -271,107 +269,8 @@ public class HomeFragment extends Fragment{
     }
 
 
-    public boolean isEnableFilter() {
-        return enableFilter;
-    }
-
-    public void setEnableFilter(boolean enableFilter) {
-        this.enableFilter = enableFilter;
-    }
 
 
 
-    public void writeLog(String text)
-    {
-        File logFile = new File("sdcard/log.txt");
-        if (!logFile.exists())
-        {
-            try
-            {
-                logFile.createNewFile();
-            }
-            catch (IOException e)
-            {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        }
-        try
-        {
-            //BufferedWriter for performance, true to set append to file flag
-            BufferedWriter buf = new BufferedWriter(new FileWriter(logFile, true));
-            buf.append(text);
-            buf.newLine();
-            buf.close();
-        }
-        catch (IOException e)
-        {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-    }
 
-
-    private void showAlertPhPermission() {
-        final AlertDialog.Builder dialog = new AlertDialog.Builder(getContext());
-        dialog.setTitle("Enable Phone")
-                .setMessage("Please Enable Phone to " +
-                        "use this app")
-                .setPositiveButton("Application Settings", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface paramDialogInterface, int paramInt) {
-//                        Intent myIntent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-//                        startActivity(myIntent);
-                        Intent intent = new Intent();
-                        intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                        Uri uri = Uri.fromParts("package", mainActivity.getPackageName(), null);
-                        intent.setData(uri);
-                        startActivity(intent);
-                    }
-                })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface paramDialogInterface, int paramInt) {
-
-                    }
-                });
-        dialog.show();
-    }
-
-    private void askJourneyName(){
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setTitle("Journey Name");
-
-        // Set up the input
-        final EditText input = new EditText(getContext());
-        // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
-        input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_NORMAL);
-        builder.setView(input);
-
-        // Set up the buttons
-        builder.setPositiveButton("Start", new DialogInterface.OnClickListener(){
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                String text = input.getText().toString();
-                if(text != null && text.trim().length() == 0){
-                    Toast.makeText( getContext(),"Journey Name can not be Empty", Toast.LENGTH_SHORT).show();
-                }else{
-                    SensorData.setJourneyId(SensorData.getDeviceId()+ System.currentTimeMillis());
-                    DatabaseHandler.saveJourneyName(text);
-                    // change the btn icon to started state
-//                    startBtn.setImageResource(R.drawable.ic_pause_blue_outline);
-                    GraphFragment.setStarted(true);
-                    Toast.makeText( getContext(),"Journey Started", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener(){
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
-
-        builder.show();
-    }
 }
