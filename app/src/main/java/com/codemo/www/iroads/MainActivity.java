@@ -43,6 +43,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -324,12 +325,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavigationHandler.navigateTo("homeFragment");
         } else if (id == R.id.nav_settings) {
             NavigationHandler.navigateTo("settingsFragment");
-        }
+//        }
 //        } else if (id == R.id.nav_share) {
 //
-//        } else if (id == R.id.nav_send) {
-//
-//        }
+        } else if (id == R.id.nav_help) {
+            NavigationHandler.navigateTo("helpFragment");
+        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 
 import com.codemo.www.iroads.Database.SensorData;
 import com.google.android.gms.location.LocationListener;

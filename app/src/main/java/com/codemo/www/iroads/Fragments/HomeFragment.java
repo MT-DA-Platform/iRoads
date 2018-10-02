@@ -173,37 +173,37 @@ public class HomeFragment extends Fragment{
 
         GraphController.setIRIChart(iriChart);
 
-        fuelChart = (LineChart) view.findViewById(R.id.chartFuel);
-        fuelChart.getDescription().setEnabled(false);
+//        fuelChart = (LineChart) view.findViewById(R.id.chartFuel);
+//        fuelChart.getDescription().setEnabled(false);
+//
+//        fuelChart.setTouchEnabled(true);
+//        fuelChart.setDragEnabled(true);
+//        fuelChart.setScaleEnabled(false);
+//        fuelChart.setDrawGridBackground(false);
+//        fuelChart.setPinchZoom(false);
+//        fuelChart.setBackgroundColor(Color.TRANSPARENT);
 
-        fuelChart.setTouchEnabled(true);
-        fuelChart.setDragEnabled(true);
-        fuelChart.setScaleEnabled(false);
-        fuelChart.setDrawGridBackground(false);
-        fuelChart.setPinchZoom(false);
-        fuelChart.setBackgroundColor(Color.TRANSPARENT);
-
-        YAxis lAxisFuel = fuelChart.getAxisLeft();
-
-        YAxis rAxisFuel = fuelChart.getAxisRight();
-        rAxisFuel.setEnabled(false);
-
-        XAxis xAxisFuel  = fuelChart.getXAxis();
-        xAxisFuel.setEnabled(true);
-        xAxisFuel.setDrawLabels(false);
-        xAxisFuel.setDrawAxisLine(false);
-        xAxisFuel.setDrawGridLines(false);
-
-        LineData dataFuel = new LineData();
+//        YAxis lAxisFuel = fuelChart.getAxisLeft();
+//
+//        YAxis rAxisFuel = fuelChart.getAxisRight();
+//        rAxisFuel.setEnabled(false);
+//
+//        XAxis xAxisFuel  = fuelChart.getXAxis();
+//        xAxisFuel.setEnabled(true);
+//        xAxisFuel.setDrawLabels(false);
+//        xAxisFuel.setDrawAxisLine(false);
+//        xAxisFuel.setDrawGridLines(false);
+//
+//        LineData dataFuel = new LineData();
 //        data.setValueTextColor(Color.WHITE);
-        fuelChart.setData(dataFuel);
+//        fuelChart.setData(dataFuel);
 
-        Legend lFuel = fuelChart.getLegend();
-        lFuel.setEnabled(false);
+//        Legend lFuel = fuelChart.getLegend();
+//        lFuel.setEnabled(false);
 //        l.setForm(Legend.LegendForm.LINE);
 //        l.setTextColor(Color.LTGRAY);
 
-        GraphController.setFuelChart(fuelChart);
+//        GraphController.setFuelChart(fuelChart);
 
         speedProgressBar = (ProgressBar) view.findViewById(R.id.speed_progress_bar);
 //        rpmProgressBar = (ProgressBar) view.findViewById(R.id.rpm_progress_bar);
