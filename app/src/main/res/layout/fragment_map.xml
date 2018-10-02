@@ -5,23 +5,43 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+    <fragment
         android:id="@+id/mapFragment"
         android:name="com.google.android.gms.maps.MapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context="com.codemo.www.iroads.Fragments.GMapFragment" />
 
-    <!-- TODO: Update blank fragment layout -->
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical|end"
-        android:layout_margin="@dimen/fab_margin"
-        app:fabSize="mini"
-        app:srcCompat="@drawable/ic_my_location_black" />
+        android:layout_gravity="bottom"
+        android:orientation="vertical">
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/fab_margin"
+            android:layout_gravity="end"
+            app:fabSize="mini"
+            app:srcCompat="@drawable/ic_my_location_black" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/infoBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="90dp"
+            android:layout_marginLeft="16dp"
+            android:layout_gravity="end"
+            app:fabSize="mini"
+            app:srcCompat="@drawable/ic_info" />
+
+    </LinearLayout>
+
+    <!-- TODO: Update blank fragment layout -->
     <!--<android.support.design.widget.FloatingActionButton-->
         <!--android:id="@+id/fab"-->
         <!--android:layout_width="match_parent"-->

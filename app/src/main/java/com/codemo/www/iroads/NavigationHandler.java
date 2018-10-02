@@ -8,7 +8,7 @@ import com.codemo.www.iroads.Fragments.GMapFragment;
 import com.codemo.www.iroads.Fragments.GraphFragment;
 import com.codemo.www.iroads.Fragments.HomeFragment;
 import com.codemo.www.iroads.Fragments.SettingsFragment;
-import com.codemo.www.iroads.Fragments.TaggerFragment;
+import com.codemo.www.iroads.Fragments.HelpFragment;
 
 /**
  * Created by aminda on 3/6/2018.
@@ -41,9 +41,9 @@ public class NavigationHandler {
                 transaction.hide(manager.findFragmentByTag("graphFragment"));
                 Log.d("rht","aaaaaaaaaaaaaaaaaaaa.....hide graph ....aaaaaaaaaaaaaaaaaaaaaa***");
             }
-            if(manager.findFragmentByTag("taggerFragment") != null){
-                transaction.hide(manager.findFragmentByTag("taggerFragment"));
-                Log.d("rht","aaaaaaaaaaaaaaaaaaaa.....hide tagger ....aaaaaaaaaaaaaaaaaaaaaa***");
+            if(manager.findFragmentByTag("helpFragment") != null){
+                transaction.hide(manager.findFragmentByTag("helpFragment"));
+                Log.d("rht","aaaaaaaaaaaaaaaaaaaa.....hide help ....aaaaaaaaaaaaaaaaaaaaaa***");
             }
         }
         else if(fragment == "mapFragment"){
@@ -65,9 +65,9 @@ public class NavigationHandler {
                 transaction.hide(manager.findFragmentByTag("graphFragment"));
                 Log.d("rht","aaaaaaaaaaaaaaaaaaaa.....hide graph ....aaaaaaaaaaaaaaaaaaaaaa***");
             }
-            if(manager.findFragmentByTag("taggerFragment") != null){
-                transaction.hide(manager.findFragmentByTag("taggerFragment"));
-                Log.d("rht","aaaaaaaaaaaaaaaaaaaa.....hide tagger ....aaaaaaaaaaaaaaaaaaaaaa***");
+            if(manager.findFragmentByTag("helpFragment") != null){
+                transaction.hide(manager.findFragmentByTag("helpFragment"));
+                Log.d("rht","aaaaaaaaaaaaaaaaaaaa.....hide help ....aaaaaaaaaaaaaaaaaaaaaa***");
             }
         }
         else if(fragment == "graphFragment"){
@@ -90,17 +90,17 @@ public class NavigationHandler {
                 transaction.hide(manager.findFragmentByTag("mapFragment"));
                 Log.d("rht","aaaaaaaaaaaaaaaaaaaa.....hide map ....aaaaaaaaaaaaaaaaaaaaaa***");
             }
-            if(manager.findFragmentByTag("taggerFragment") != null){
-                transaction.hide(manager.findFragmentByTag("taggerFragment"));
-                Log.d("rht","aaaaaaaaaaaaaaaaaaaa.....hide tagger ....aaaaaaaaaaaaaaaaaaaaaa***");
+            if(manager.findFragmentByTag("helpFragment") != null){
+                transaction.hide(manager.findFragmentByTag("helpFragment"));
+                Log.d("rht","aaaaaaaaaaaaaaaaaaaa.....hide help ....aaaaaaaaaaaaaaaaaaaaaa***");
             }
         }
-        else if(fragment == "taggerFragment"){
-            if(manager.findFragmentByTag("taggerFragment") == null){
-                transaction.add(R.id.contentLayout, new TaggerFragment(), "taggerFragment");
+        else if(fragment == "helpFragment"){
+            if(manager.findFragmentByTag("helpFragment") == null){
+                transaction.add(R.id.contentLayout, new HelpFragment(), "helpFragment");
             }else{
-                transaction.show(manager.findFragmentByTag("taggerFragment"));
-                Log.d("rht","aaaaaaaaaaaaaaaaaaaa.....resume tagger ....aaaaaaaaaaaaaaaaaaaaaa***");
+                transaction.show(manager.findFragmentByTag("helpFragment"));
+                Log.d("rht","aaaaaaaaaaaaaaaaaaaa.....resume help ....aaaaaaaaaaaaaaaaaaaaaa***");
             }
             if(manager.findFragmentByTag("homeFragment") != null){
                 transaction.hide(manager.findFragmentByTag("homeFragment"));
@@ -120,6 +120,7 @@ public class NavigationHandler {
                 Log.d("rht","aaaaaaaaaaaaaaaaaaaa.....hide graph ....aaaaaaaaaaaaaaaaaaaaaa***");
             }
         }
+        
         else{
             if(manager.findFragmentByTag("settingsFragment") == null){
                 transaction.add(R.id.contentLayout, new SettingsFragment(), "settingsFragment");
@@ -139,9 +140,9 @@ public class NavigationHandler {
                 transaction.hide(manager.findFragmentByTag("graphFragment"));
                 Log.d("rht","aaaaaaaaaaaaaaaaaaaa.....hide graph ....aaaaaaaaaaaaaaaaaaaaaa***");
             }
-            if(manager.findFragmentByTag("taggerFragment") != null){
-                transaction.hide(manager.findFragmentByTag("taggerFragment"));
-                Log.d("rht","aaaaaaaaaaaaaaaaaaaa.....hide tagger ....aaaaaaaaaaaaaaaaaaaaaa***");
+            if(manager.findFragmentByTag("helpFragment") != null){
+                transaction.hide(manager.findFragmentByTag("helpFragment"));
+                Log.d("rht","aaaaaaaaaaaaaaaaaaaa.....hide help ....aaaaaaaaaaaaaaaaaaaaaa***");
             }
         }
 

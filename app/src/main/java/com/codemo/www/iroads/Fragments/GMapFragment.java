@@ -57,22 +57,27 @@ public class GMapFragment extends Fragment implements OnMapReadyCallback {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_map, container, false);
         FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
-        fab.setColorFilter(ContextCompat.getColor(activity.getApplicationContext(), R.color.colorWhite));
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 updateLocation();
-//                Snackbar.make(view, "Visit iroads.projects.mrt.ac.lk for more info.", Snackbar.LENGTH_LONG)
-//                        .setAction("click here", new View.OnClickListener() {
-//                            @Override
-//                            public void onClick(View view) {
-////                                Intent browserIntent = new
-////                                        Intent(Intent.ACTION_VIEW,
-////                                        Uri.parse(getString(R.string.page_address)));
-////                                startActivity(browserIntent);
-//
-//                            }
-//                        }).show();
+            }
+        });
+        FloatingActionButton infoBtn = (FloatingActionButton) view.findViewById(R.id.infoBtn);
+        infoBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Visit iroads.projects.mrt.ac.lk for more info.", Snackbar.LENGTH_LONG)
+                        .setAction("go !", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Intent browserIntent = new
+                                        Intent(Intent.ACTION_VIEW,
+                                        Uri.parse(getString(R.string.page_address)));
+                                startActivity(browserIntent);
+
+                            }
+                        }).show();
             }
         });
         Log.d("rht","aaaaaaaaaaaaaaaaaaaa.....map fragment created....aaaaaaaaaaaaaaaaaaaaaa***");
@@ -97,7 +102,7 @@ public class GMapFragment extends Fragment implements OnMapReadyCallback {
         Log.d("ssssssssssssssssssssss","sssssssssssssssssssssssssssssssssss");
         marker = null;
         float zoomLevel = 7.0f;
-        LatLng sri_lanka = new LatLng(7.241829, 80.7556483);
+        LatLng sri_lanka = new LatLng(8.068590, 80.654578);
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sri_lanka, zoomLevel));
 
     }

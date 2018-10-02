@@ -52,6 +52,7 @@ import com.codemo.www.iroads.Database.DatabaseHandler;
 import com.codemo.www.iroads.Database.SensorData;
 import com.codemo.www.iroads.Fragments.GMapFragment;
 import com.codemo.www.iroads.Fragments.GraphFragment;
+import com.codemo.www.iroads.Fragments.HelpFragment;
 import com.codemo.www.iroads.Fragments.HomeFragment;
 import com.codemo.www.iroads.Fragments.SettingsFragment;
 import com.codemo.www.iroads.Fragments.TaggerFragment;
@@ -174,6 +175,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         transaction.add(R.id.contentLayout, new GraphFragment(), "graphFragment");
         transaction.add(R.id.contentLayout, new HomeFragment(), "homeFragment");
         transaction.add(R.id.contentLayout, new SettingsFragment(), "settingsFragment");
+        transaction.add(R.id.contentLayout, new HelpFragment(), "helpFragment");
         transaction.commit();
 //
         GMapFragment.setActivity(this);
