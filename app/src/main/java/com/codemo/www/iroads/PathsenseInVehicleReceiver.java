@@ -82,7 +82,7 @@ public class PathsenseInVehicleReceiver extends BroadcastReceiver {
                 sbmax.append(maxActivity.getDetectedActivity()).append(",");
             }
 
-            Toast.makeText(context, sbmax.toString(), Toast.LENGTH_LONG).show();
+//            Toast.makeText(context, sbmax.toString(), Toast.LENGTH_LONG).show();
             String required_status = "IN_VEHICLE,";
 //            String required_status = "ON_FOOT,WALKING,";
             if(sbmax.toString().equals(required_status)){
@@ -91,7 +91,7 @@ public class PathsenseInVehicleReceiver extends BroadcastReceiver {
                         //  do nothing..
                     }else{
                         startJourney();
-                        Toast.makeText(context, " JOURNEY STARTED", Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, " Journey started !", Toast.LENGTH_LONG).show();
                     }
                 }
 //                setLastTime(System.currentTimeMillis());
@@ -103,7 +103,7 @@ public class PathsenseInVehicleReceiver extends BroadcastReceiver {
                         //  do nothing..
                     }else{
                         stopJourney();
-                        Toast.makeText(context, " JOURNEY STOPPED", Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, " Journey stopped !", Toast.LENGTH_LONG).show();
                     }
                 }
             }
