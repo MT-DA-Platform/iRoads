@@ -109,21 +109,27 @@ public class GMapFragment extends Fragment implements OnMapReadyCallback {
     }
 
     public static void updateLocation(){
-        LatLng loc = new LatLng(Double.parseDouble(SensorData.getMlat()), Double.parseDouble(SensorData.getMlon()));
-        float zoomLevel;
+        double lat = Double.parseDouble(SensorData.getMlat());
+        double lon = Double.parseDouble(SensorData.getMlon());
 
-        if (marker == null) {
-            marker = gmap.addMarker(new MarkerOptions()
-                    .position(loc)
-                    .title("You are Here!")
-                    .icon(BitmapDescriptorFactory.fromResource(R.mipmap.marker)));
+        if(lat != 0.0){
+            LatLng loc = new LatLng(lat, lon);
+            float zoomLevel;
+
+            if (marker == null) {
+                marker = gmap.addMarker(new MarkerOptions()
+                        .position(loc)
+                        .title("You are Here!")
+                        .icon(BitmapDescriptorFactory.fromResource(R.mipmap.marker)));
 //            marker.showInfoWindow();
-        } else {
-            marker.setPosition(loc);
-        }
-        zoomLevel = 15.0f;//This goes up to 21
+            } else {
+                marker.setPosition(loc);
+            }
+            zoomLevel = 15.0f;//This goes up to 21
 
-        gmap.moveCamera(CameraUpdateFactory.newLatLngZoom(loc,zoomLevel));
+            gmap.moveCamera(CameraUpdateFactory.newLatLngZoom(loc,zoomLevel));
+        }
+
     }
 
 }

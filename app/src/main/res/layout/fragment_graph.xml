@@ -93,30 +93,30 @@
                     android:text="Raw"
                     android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium" />
 
-                <CheckBox
+                <android.support.v7.widget.AppCompatCheckBox
                     android:id="@+id/xValue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:buttonTint="@color/colorX"
+                    android:buttonTint="@color/colorGreyLight"
                     android:text=""
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
-                <CheckBox
+                <android.support.v7.widget.AppCompatCheckBox
                     android:id="@+id/yValue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:buttonTint="@color/colorY"
+                    android:buttonTint="@color/colorGreyLight"
                     android:text=""
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
-                <CheckBox
+                <android.support.v7.widget.AppCompatCheckBox
                     android:id="@+id/zValue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:buttonTint="@color/colorZ"
+                    android:buttonTint="@color/colorGreyLight"
                     android:text=""
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
@@ -138,30 +138,30 @@
                     android:text="Reoriented"
                     android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium" />
 
-                <CheckBox
+                <android.support.v7.widget.AppCompatCheckBox
                     android:id="@+id/xValueReorientedBox"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:buttonTint="@color/colorXReori"
+                    android:buttonTint="@color/colorGreyLight"
                     android:text=""
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
-                <CheckBox
+                <android.support.v7.widget.AppCompatCheckBox
                     android:id="@+id/yValueReorientedBox"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:buttonTint="@color/colorYReori"
+                    android:buttonTint="@color/colorGreyLight"
                     android:text=""
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
-                <CheckBox
+                <android.support.v7.widget.AppCompatCheckBox
                     android:id="@+id/zValueReorientedBox"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:buttonTint="@color/colorZReori"
+                    android:buttonTint="@color/colorGreyLight"
                     android:text=""
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
@@ -183,30 +183,30 @@
                     android:text="Average Filtered"
                     android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium" />
 
-                <CheckBox
+                <android.support.v7.widget.AppCompatCheckBox
                     android:id="@+id/xValueFiltered"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:buttonTint="@color/colorXAvg"
+                    android:buttonTint="@color/colorGreyLight"
                     android:text=""
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
-                <CheckBox
+                <android.support.v7.widget.AppCompatCheckBox
                     android:id="@+id/yValueFiltered"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:buttonTint="@color/colorYAvg"
+                    android:buttonTint="@color/colorGreyLight"
                     android:text=""
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
-                <CheckBox
+                <android.support.v7.widget.AppCompatCheckBox
                     android:id="@+id/zValueAverageFiltered"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:buttonTint="@color/colorZAvg"
+                    android:buttonTint="@color/colorGreyLight"
                     android:text=""
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
@@ -230,7 +230,7 @@
                     android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium" />
 
 
-                <!--<CheckBox-->
+                <!--<android.support.v7.widget.AppCompatCheckBox-->
                 <!--android:id="@+id/xValue"-->
                 <!--android:layout_width="wrap_content"-->
                 <!--android:layout_height="wrap_content"-->
@@ -238,7 +238,7 @@
                 <!--android:text=""-->
                 <!--android:textAppearance="@style/TextAppearance.AppCompat.Medium" />-->
 
-                <!--<CheckBox-->
+                <!--<android.support.v7.widget.AppCompatCheckBox-->
                 <!--android:id="@+id/yValue"-->
                 <!--android:layout_width="wrap_content"-->
                 <!--android:layout_height="wrap_content"-->
@@ -246,12 +246,12 @@
                 <!--android:text=""-->
                 <!--android:textAppearance="@style/TextAppearance.AppCompat.Medium" />-->
 
-                <CheckBox
+                <android.support.v7.widget.AppCompatCheckBox
                     android:id="@+id/zValueHighPassFiltered"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:buttonTint="@color/colorZHighPass"
+                    android:buttonTint="@color/colorGreyLight"
                     android:text=""
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
