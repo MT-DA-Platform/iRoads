@@ -85,32 +85,6 @@ public class HomeFragment extends Fragment{
 
         obd2speed = (TextView) view.findViewById(R.id.obd2speed);
 
-//        startBtn = (ImageButton) view.findViewById(R.id.startBtn);
-//        startBtn.setOnClickListener(new ImageButton.OnClickListener(){
-//            @Override
-//            public void onClick(View view) {
-////                spinnerReori.setVisibility(View.VISIBLE);
-//                if(!GraphFragment.isStarted()){
-//                    // check whether the permission granted to retrieve IMEI number
-//                    TelephonyManager telephonyManager = (TelephonyManager) mainActivity.getSystemService(Context.TELEPHONY_SERVICE);
-//                    if (ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-//                        showAlertPhPermission();
-//                        return;
-//                    }
-//                    String deviceId = telephonyManager.getDeviceId();
-//                    SensorData.setDeviceId(deviceId);
-//                    Log.d(TAG,"--------------- DeviceId --------- /// "+ deviceId);
-//                    askJourneyName();
-//                }else{
-//                    // change the btn icon back to idle state
-//                    startBtn.setImageResource(R.drawable.ic_play_blue_outline);
-//                    GraphFragment.setStarted(false);
-//                    Toast.makeText( getContext(),"Journey Stopped", Toast.LENGTH_SHORT).show();
-//                }
-//
-//            }
-//        });
-
         mChart = (LineChart) view.findViewById(R.id.chartAccelerationZ);
         mChart.getDescription().setEnabled(false);
 

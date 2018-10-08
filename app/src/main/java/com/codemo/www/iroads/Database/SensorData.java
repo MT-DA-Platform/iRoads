@@ -21,6 +21,7 @@ public class SensorData {
     private static String gyroZ = "";
     private static String deviceId = "";
     private static String journeyId = "";
+    private static String model = "";
 
     public static String getJourneyId() {
         return journeyId;
@@ -140,5 +141,13 @@ public class SensorData {
 
     public static void setGyroZ(String gyroZ) {
         SensorData.gyroZ = gyroZ;
+    }
+
+    public static String getModel() {
+        return model;
+    }
+
+    public static void setModel(String model) {
+        SensorData.model = model;
     }
 }

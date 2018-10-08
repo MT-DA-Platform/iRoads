@@ -1,15 +1,19 @@
 package com.codemo.www.iroads.Fragments;
 
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.AppCompatCheckBox;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,7 +48,7 @@ public class GraphFragment extends Fragment {
     private SensorManager sensorManager;
     private Sensor accelerometer;
     private boolean enableFilter;
-    private CheckBox xValue, xValueFiltered, yValue, yValueFiltered, zValue, zValueAverageFiltered,
+    private AppCompatCheckBox xValue, xValueFiltered, yValue, yValueFiltered, zValue, zValueAverageFiltered,
             zValueHighPassFiltered, zValueReoriented, yValueReoriented, xValueReoriented;
     private static boolean xValueChecked, xValueFilteredChecked, yValueChecked, yValueFilteredChecked, zValueChecked, zValueAverageFilteredChecked,
             zValueHighPassFilteredChecked, xValueReorientedChecked, yValueReorientedChecked, zValueReorientedChecked;
@@ -129,29 +133,38 @@ public class GraphFragment extends Fragment {
 
         if(accelerometer != null){
 //            sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_GAME);
-            xValue = (CheckBox) view.findViewById(R.id.xValue);
-            xValueFiltered = (CheckBox) view.findViewById(R.id.xValueFiltered);
-            xValueReoriented = (CheckBox) view.findViewById(R.id.xValueReorientedBox);
+            xValue = (AppCompatCheckBox) view.findViewById(R.id.xValue);
+            xValueFiltered = (AppCompatCheckBox) view.findViewById(R.id.xValueFiltered);
+            xValueReoriented = (AppCompatCheckBox) view.findViewById(R.id.xValueReorientedBox);
             // filtering process for sensor values
-            yValue = (CheckBox) view.findViewById(R.id.yValue);
-            yValueFiltered = (CheckBox) view.findViewById(R.id.yValueFiltered);
-            yValueReoriented = (CheckBox) view.findViewById(R.id.yValueReorientedBox);
-            zValue = (CheckBox) view.findViewById(R.id.zValue);
-            zValueAverageFiltered = (CheckBox) view.findViewById(R.id.zValueAverageFiltered);
-            zValueHighPassFiltered = (CheckBox) view.findViewById(R.id.zValueHighPassFiltered);
-            zValueReoriented = (CheckBox) view.findViewById(R.id.zValueReorientedBox);
+            yValue = (AppCompatCheckBox) view.findViewById(R.id.yValue);
+            yValueFiltered = (AppCompatCheckBox) view.findViewById(R.id.yValueFiltered);
+            yValueReoriented = (AppCompatCheckBox) view.findViewById(R.id.yValueReorientedBox);
+            zValue = (AppCompatCheckBox) view.findViewById(R.id.zValue);
+            zValueAverageFiltered = (AppCompatCheckBox) view.findViewById(R.id.zValueAverageFiltered);
+            zValueHighPassFiltered = (AppCompatCheckBox) view.findViewById(R.id.zValueHighPassFiltered);
+            zValueReoriented = (AppCompatCheckBox) view.findViewById(R.id.zValueReorientedBox);
         }else{
             Log.d(TAG, "Accelorometer not available");
         }
 
         //      initializing listners for each acceleration output
         xValue.setOnClickListener(new View.OnClickListener() {
+//            @SuppressLint("RestrictedApi")
             @Override
             public void onClick(View view) {
                 if(xValue.isChecked()){
                     xValueChecked = true;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        xValue.setButtonTintList(ColorStateList.valueOf(ContextCompat.getColor(activity.getApplicationContext(), R.color.colorX)));
+                    }
+//                    xValue.setHighlightColor(getResources().getColor(R.color.colorPrimary));
+//                    xValue.setSupportButtonTintList(colorStateList);
                 }else{
                     xValueChecked = false;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        xValue.setButtonTintList(ColorStateList.valueOf(ContextCompat.getColor(activity.getApplicationContext(), R.color.colorGreyLight)));
+                    }
                     deleteSet("x", mChart);
                 }
             }
@@ -161,8 +174,14 @@ public class GraphFragment extends Fragment {
             public void onClick(View view) {
                 if(yValue.isChecked()){
                     yValueChecked = true;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        yValue.setButtonTintList(ColorStateList.valueOf(ContextCompat.getColor(activity.getApplicationContext(), R.color.colorY)));
+                    }
                 }else{
                     yValueChecked = false;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        yValue.setButtonTintList(ColorStateList.valueOf(ContextCompat.getColor(activity.getApplicationContext(), R.color.colorGreyLight)));
+                    }
                     deleteSet("y", mChart);
                 }
             }
@@ -172,8 +191,14 @@ public class GraphFragment extends Fragment {
             public void onClick(View view) {
                 if(zValue.isChecked()){
                     zValueChecked = true;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        zValue.setButtonTintList(ColorStateList.valueOf(ContextCompat.getColor(activity.getApplicationContext(), R.color.colorZ)));
+                    }
                 }else{
                     zValueChecked = false;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        zValue.setButtonTintList(ColorStateList.valueOf(ContextCompat.getColor(activity.getApplicationContext(), R.color.colorGreyLight)));
+                    }
                     deleteSet("z", mChart);
                 }
             }
@@ -183,8 +208,14 @@ public class GraphFragment extends Fragment {
             public void onClick(View view) {
                 if(xValueFiltered.isChecked()){
                     xValueFilteredChecked = true;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        xValueFiltered.setButtonTintList(ColorStateList.valueOf(ContextCompat.getColor(activity.getApplicationContext(), R.color.colorXAvg)));
+                    }
                 }else{
                     xValueFilteredChecked = false;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        xValueFiltered.setButtonTintList(ColorStateList.valueOf(ContextCompat.getColor(activity.getApplicationContext(), R.color.colorGreyLight)));
+                    }
                     deleteSet("x avg", mChart);
                 }
             }
@@ -194,8 +225,14 @@ public class GraphFragment extends Fragment {
             public void onClick(View view) {
                 if(yValueFiltered.isChecked()){
                     yValueFilteredChecked = true;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        yValueFiltered.setButtonTintList(ColorStateList.valueOf(ContextCompat.getColor(activity.getApplicationContext(), R.color.colorYAvg)));
+                    }
                 }else{
                     yValueFilteredChecked = false;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        yValueFiltered.setButtonTintList(ColorStateList.valueOf(ContextCompat.getColor(activity.getApplicationContext(), R.color.colorGreyLight)));
+                    }
                     deleteSet("y avg", mChart);
                 }
             }
@@ -205,8 +242,14 @@ public class GraphFragment extends Fragment {
             public void onClick(View view) {
                 if(zValueAverageFiltered.isChecked()){
                     zValueAverageFilteredChecked = true;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        zValueAverageFiltered.setButtonTintList(ColorStateList.valueOf(ContextCompat.getColor(activity.getApplicationContext(), R.color.colorZAvg)));
+                    }
                 }else{
                     zValueAverageFilteredChecked = false;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        zValueAverageFiltered.setButtonTintList(ColorStateList.valueOf(ContextCompat.getColor(activity.getApplicationContext(), R.color.colorGreyLight)));
+                    }
                     deleteSet("z avg", mChart);
                 }
             }
@@ -216,8 +259,14 @@ public class GraphFragment extends Fragment {
             public void onClick(View view) {
                 if(xValueReoriented.isChecked()){
                     xValueReorientedChecked = true;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        xValueReoriented.setButtonTintList(ColorStateList.valueOf(ContextCompat.getColor(activity.getApplicationContext(), R.color.colorXReori)));
+                    }
                 }else{
                     xValueReorientedChecked = false;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        xValueReoriented.setButtonTintList(ColorStateList.valueOf(ContextCompat.getColor(activity.getApplicationContext(), R.color.colorGreyLight)));
+                    }
                     deleteSet("x reori", mChart);
                 }
             }
@@ -227,8 +276,14 @@ public class GraphFragment extends Fragment {
             public void onClick(View view) {
                 if(yValueReoriented.isChecked()){
                     yValueReorientedChecked = true;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        yValueReoriented.setButtonTintList(ColorStateList.valueOf(ContextCompat.getColor(activity.getApplicationContext(), R.color.colorYReori)));
+                    }
                 }else{
                     yValueReorientedChecked = false;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        yValueReoriented.setButtonTintList(ColorStateList.valueOf(ContextCompat.getColor(activity.getApplicationContext(), R.color.colorGreyLight)));
+                    }
                     deleteSet("y reori", mChart);
                 }
             }
@@ -238,8 +293,14 @@ public class GraphFragment extends Fragment {
             public void onClick(View view) {
                 if(zValueReoriented.isChecked()){
                     zValueReorientedChecked = true;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        zValueReoriented.setButtonTintList(ColorStateList.valueOf(ContextCompat.getColor(activity.getApplicationContext(), R.color.colorZReori)));
+                    }
                 }else{
                     zValueReorientedChecked = false;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        zValueReoriented.setButtonTintList(ColorStateList.valueOf(ContextCompat.getColor(activity.getApplicationContext(), R.color.colorGreyLight)));
+                    }
                     deleteSet("z reori", mChart);
                 }
             }
@@ -249,8 +310,14 @@ public class GraphFragment extends Fragment {
             public void onClick(View view) {
                 if(zValueHighPassFiltered.isChecked()){
                     zValueHighPassFilteredChecked = true;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        zValueHighPassFiltered.setButtonTintList(ColorStateList.valueOf(ContextCompat.getColor(activity.getApplicationContext(), R.color.colorZHighPass)));
+                    }
                 }else{
                     zValueHighPassFilteredChecked = false;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        zValueHighPassFiltered.setButtonTintList(ColorStateList.valueOf(ContextCompat.getColor(activity.getApplicationContext(), R.color.colorGreyLight)));
+                    }
                     deleteSet("z high pass", mChart);
                 }
             }

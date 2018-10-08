@@ -137,6 +137,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private Thread fakethread;
 
     private DatabaseHandler dbHandler;
+    private boolean gpsEnabled;
     private Runnable handlerTask;
     private static boolean replicationStopped = true;
     private static ProgressBar spinnerObd;
@@ -165,6 +166,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView.setNavigationItemSelectedListener(this);
 
         MainActivity.activity = this;
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         manager = getSupportFragmentManager();
         transaction = manager.beginTransaction();
 
@@ -266,8 +268,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
         dbHandler = new DatabaseHandler(getApplicationContext());
 
-        checkAndRequestPermissions();
-
+        if(checkAndRequestPermissions()){
+            saveDeviceId();
+        }
 
         api = PathsenseLocationProviderApi.getInstance(getApplicationContext());
         api.requestInVehicleLocationUpdates(PathsenseInVehicleReceiver.class);
@@ -296,7 +299,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public void saveDeviceId() {
         String serial = Build.SERIAL;
-
+        Log.d("TAG","inside DeviceID");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
                 // TODO: Consider calling
@@ -304,9 +307,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
             serial = Build.getSerial();
         }
-
-        Log.i("TAG","android.os.Build.SERIAL: " + serial);
-        SensorData.setDeviceId(String.valueOf(Build.SERIAL.hashCode()));
+        String device_name = Build.BRAND + " " + Build.MODEL;
+        Log.d("TAG","Device properties: " + device_name + " " + serial);
+        SensorData.setDeviceId(String.valueOf(serial.hashCode()));
+        SensorData.setModel(device_name);
         Log.d(TAG,"--------------- DeviceId --------- /// "+ SensorData.getDeviceId());
     }
 
@@ -325,9 +329,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavigationHandler.navigateTo("homeFragment");
         } else if (id == R.id.nav_settings) {
             NavigationHandler.navigateTo("settingsFragment");
-//        }
-//        } else if (id == R.id.nav_share) {
-//
         } else if (id == R.id.nav_help) {
             NavigationHandler.navigateTo("helpFragment");
         }
@@ -354,6 +355,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //                            Log.d(TAG,"--------------- replication is stopped --------- /// ");
                             dbHandler.startReplication();
                             startSaving();
+                            if(!isGpsEnabled()){
+                                checkLocation();
+                            }
                             setReplicationStopped(false);
                             counter = 0;
                         }
@@ -402,9 +406,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private boolean checkLocation() {
-        if(!isLocationEnabled())
+        setGpsEnabled(isLocationEnabled());
+        if(!isGpsEnabled())
             showAlert();
-        return isLocationEnabled();
+        return isGpsEnabled();
     }
 
 
@@ -464,7 +469,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             HomeController.updateLocation(mLocation);
 
         } else {
-            Toast.makeText(this, "Location not Detected", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, "Location not Detected", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -681,6 +686,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public static void setReplicationStopped(boolean replicationStarteds) {
         replicationStopped = replicationStarteds;
+    }
+
+    public boolean isGpsEnabled() {
+        return gpsEnabled;
+    }
+
+    public void setGpsEnabled(boolean gpsEnabled) {
+        this.gpsEnabled = gpsEnabled;
     }
 
 
@@ -979,8 +992,31 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            showExitAlert();
+//            super.onBackPressed();
         }
+    }
+
+    private void showExitAlert() {
+        final AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+        dialog.setTitle("Confirmation")
+                .setMessage("Do you want to exit?")
+                .setCancelable(true)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+                        api.destroy();
+                        android.os.Process.killProcess(android.os.Process.myPid());
+                        finish();
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+
+                    }
+                });
+        dialog.show();
     }
 
     @Override
