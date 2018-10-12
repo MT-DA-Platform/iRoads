@@ -44,7 +44,7 @@ public class SignalProcessor {
         this.constantFactor = constantFactorSum / this.constantFactorQueue.size();
     }
 
-    public double averageFilter(double sensorValue){ // Filters using the average of a data set
+    public double averageFilter(double sensorValue) { // Filters using the average of a data set
         this.dataSum = 0;
         this.dataQueue.add(sensorValue);
 
@@ -52,16 +52,16 @@ public class SignalProcessor {
             this.dataQueue.remove(0);
         }
 
-        for (Double d : this.dataQueue){
+        for (Double d : this.dataQueue) {
             this.dataSum += d;
         }
 
-        this.noiseRemovedValue = (this.dataSum)/(this.dataQueue.size());
+        this.noiseRemovedValue = (this.dataSum) / (this.dataQueue.size());
         this.noiseRemovedValue -= this.constantFactor; // Removes constant noise
         return this.noiseRemovedValue;
     }
 
-    public double averageFilterWithConstantNoise(double sensorValue){ // Filters using the average
+    public double averageFilterWithConstantNoise(double sensorValue) { // Filters using the average
         // of a data set. Does not filter out constant noise.
         this.dataSum = 0;
         this.dataQueue.add(sensorValue);
@@ -70,17 +70,17 @@ public class SignalProcessor {
             this.dataQueue.remove(0);
         }
 
-        for (Double d : this.dataQueue){
+        for (Double d : this.dataQueue) {
             this.dataSum += d;
         }
 
-        this.noiseRemovedValue = (this.dataSum)/(this.dataQueue.size());
+        this.noiseRemovedValue = (this.dataSum) / (this.dataQueue.size());
         return this.noiseRemovedValue;
     }
 
-    public double highPassFilter (double sensorValue) {
+    public double highPassFilter(double sensorValue) {
         this.currentSensorValue = sensorValue;
-        double highPassFilterValue = this.highPassFilterDecayFactor*(this.
+        double highPassFilterValue = this.highPassFilterDecayFactor * (this.
                 previousHighPassFilterValue + this.currentSensorValue - this.previousSensorValue);
         this.previousHighPassFilterValue = highPassFilterValue;
         this.previousSensorValue = this.currentSensorValue;

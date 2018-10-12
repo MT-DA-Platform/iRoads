@@ -1,25 +1,21 @@
 package com.codemo.www.iroads.Fragments;
 
 
-
 import android.content.Intent;
-import android.location.Location;
-import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 
 import com.codemo.www.iroads.Database.SensorData;
-import com.google.android.gms.location.LocationListener;
+import com.codemo.www.iroads.MainActivity;
+import com.codemo.www.iroads.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -27,10 +23,6 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-
-import com.codemo.www.iroads.MainActivity;
-import com.codemo.www.iroads.NavigationHandler;
-import com.codemo.www.iroads.R;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -51,6 +43,29 @@ public class GMapFragment extends Fragment implements OnMapReadyCallback {
         activity = Activity;
     }
 
+    public static void updateLocation() {
+        double lat = Double.parseDouble(SensorData.getMlat());
+        double lon = Double.parseDouble(SensorData.getMlon());
+
+        if (lat != 0.0) {
+            LatLng loc = new LatLng(lat, lon);
+            float zoomLevel;
+
+            if (marker == null) {
+                marker = gmap.addMarker(new MarkerOptions()
+                        .position(loc)
+                        .title("You are Here!")
+                        .icon(BitmapDescriptorFactory.fromResource(R.mipmap.marker)));
+//            marker.showInfoWindow();
+            } else {
+                marker.setPosition(loc);
+            }
+            zoomLevel = 15.0f;//This goes up to 21
+
+            gmap.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, zoomLevel));
+        }
+
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -81,8 +96,8 @@ public class GMapFragment extends Fragment implements OnMapReadyCallback {
                         }).show();
             }
         });
-        Log.d("rht","aaaaaaaaaaaaaaaaaaaa.....map fragment created....aaaaaaaaaaaaaaaaaaaaaa***");
-        return  view;
+        Log.d("rht", "aaaaaaaaaaaaaaaaaaaa.....map fragment created....aaaaaaaaaaaaaaaaaaaaaa***");
+        return view;
 
     }
 
@@ -94,41 +109,15 @@ public class GMapFragment extends Fragment implements OnMapReadyCallback {
 
     }
 
-
-
     @Override
     public void onMapReady(GoogleMap googleMap) {
 
         gmap = googleMap;
-        Log.d("ssssssssssssssssssssss","sssssssssssssssssssssssssssssssssss");
+        Log.d("ssssssssssssssssssssss", "sssssssssssssssssssssssssssssssssss");
         marker = null;
         float zoomLevel = 7.0f;
         LatLng sri_lanka = new LatLng(8.068590, 80.654578);
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sri_lanka, zoomLevel));
-
-    }
-
-    public static void updateLocation(){
-        double lat = Double.parseDouble(SensorData.getMlat());
-        double lon = Double.parseDouble(SensorData.getMlon());
-
-        if(lat != 0.0){
-            LatLng loc = new LatLng(lat, lon);
-            float zoomLevel;
-
-            if (marker == null) {
-                marker = gmap.addMarker(new MarkerOptions()
-                        .position(loc)
-                        .title("You are Here!")
-                        .icon(BitmapDescriptorFactory.fromResource(R.mipmap.marker)));
-//            marker.showInfoWindow();
-            } else {
-                marker.setPosition(loc);
-            }
-            zoomLevel = 15.0f;//This goes up to 21
-
-            gmap.moveCamera(CameraUpdateFactory.newLatLngZoom(loc,zoomLevel));
-        }
 
     }
 

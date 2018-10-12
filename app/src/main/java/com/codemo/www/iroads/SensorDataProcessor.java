@@ -18,7 +18,7 @@ public class SensorDataProcessor {
 
     private static final String TAG = "SensorDataProcessor";
 
-    private static Reorientation reorientation=null;
+    private static Reorientation reorientation = null;
     private static ReorientationType reorientationType;
 
     private static SignalProcessor signalProcessorX = new SignalProcessor();// process raw
@@ -31,9 +31,9 @@ public class SensorDataProcessor {
     private static SignalProcessor signalProcessorYReoriented = new SignalProcessor();
     private static SignalProcessor signalProcessorZReoriented = new SignalProcessor();
 
-    private static SignalProcessor highPassSignalProcessorZ =new SignalProcessor();
+    private static SignalProcessor highPassSignalProcessorZ = new SignalProcessor();
 
-    private static IRICalculator iriCalculator=new IRICalculator();
+    private static IRICalculator iriCalculator = new IRICalculator();
 
     private static double reorientedAx;// reoriented filtered ax value
     private static double reorientedAy;
@@ -59,7 +59,7 @@ public class SensorDataProcessor {
     /**
      * this method is triggering when sensor data changing from MobileSensor.java
      */
-    public static void updateSensorDataProcessingValues(){
+    public static void updateSensorDataProcessingValues() {
         stableOperation(); // do stable operations if vehicle is not moving
 
         updateAvgFilteredX();
@@ -83,17 +83,14 @@ public class SensorDataProcessor {
     getters
      */
     public static double getReorientedAx() {
-//        Log.d(TAG,"reorientedAx" + reorientedAx);
         return reorientedAx;
     }
 
     public static double getReorientedAy() {
-//        Log.d(TAG,"reorientedAy" + reorientedAy);
         return reorientedAy;
     }
 
     public static double getReorientedAz() {
-//        Log.d(TAG,"reorientedAz" + reorientedAz);
         return reorientedAz;
     }
 
@@ -121,11 +118,6 @@ public class SensorDataProcessor {
         return iri;
     }
 
-
-
-
-
-
     /*
     reorientation mechanism
      */
@@ -133,77 +125,67 @@ public class SensorDataProcessor {
         return reorientationType;
     }
 
-    public static void setReorientation(ReorientationType type){
-        reorientationType=type;
-        if (type==ReorientationType.Nericel){
+    public static void setReorientation(ReorientationType type) {
+        reorientationType = type;
+        if (type == ReorientationType.Nericel) {
             nericellReorientation = true; // indicates the reorientation mechanism
-            reorientation=new NericellMechanism();
-            Log.d(TAG,"Reorientation set to Nericel");
-        }else if (type==ReorientationType.Wolverine){
+            reorientation = new NericellMechanism();
+            Log.d(TAG, "Reorientation set to Nericel");
+        } else if (type == ReorientationType.Wolverine) {
             nericellReorientation = false;
-            reorientation=new WolverineMechanism();
-            Log.d(TAG,"Reorientation set to Wolverine");
+            reorientation = new WolverineMechanism();
+            Log.d(TAG, "Reorientation set to Wolverine");
         }
     }
-
-
-
-
-
-    /*
-    value updating methods
-     */
 
     /**
      * this should run always or once in a peroid to keep updating reorientation.
      */
-    public static void updateCurrentReorientedAccelerations(){
+    public static void updateCurrentReorientedAccelerations() {
 
-        if (reorientation!=null) {
-            Vector3D reoriented= reorientation.reorient(getAvgFilteredAx(), getAvgFilteredAy(),
+        if (reorientation != null) {
+            Vector3D reoriented = reorientation.reorient(getAvgFilteredAx(), getAvgFilteredAy(),
                     getAvgFilteredAz(), MobileSensors.getCurrentMagneticX(),
                     MobileSensors.getCurrentMagneticY(), MobileSensors.getCurrentMagneticZ());
 
-            reorientedAxWithNoise=reoriented.getX();
+            reorientedAxWithNoise = reoriented.getX();
             reorientedAx = signalProcessorXReoriented.averageFilter(reorientedAxWithNoise);
-            reorientedAyWithNoise=reoriented.getY();
+            reorientedAyWithNoise = reoriented.getY();
             reorientedAy = signalProcessorYReoriented.averageFilter(reorientedAyWithNoise);
-            reorientedAzWithNoise=reoriented.getZ();
+            reorientedAzWithNoise = reoriented.getZ();
             reorientedAz = signalProcessorZReoriented.averageFilter(reorientedAzWithNoise);
 
-        }else {
-            Log.d(TAG,"set reorientation type first");
+        } else {
+            Log.d(TAG, "set reorientation type first");
         }
     }
 
 
-    public static void updateAvgFilteredX(){
-       avgFilteredAx =signalProcessorX.averageFilterWithConstantNoise(MobileSensors.getCurrentAccelerationX());
+    public static void updateAvgFilteredX() {
+        avgFilteredAx = signalProcessorX.averageFilterWithConstantNoise(MobileSensors.getCurrentAccelerationX());
     }
 
-    public static void updateAvgFilteredY(){
-        avgFilteredAy =signalProcessorY.averageFilterWithConstantNoise(MobileSensors.getCurrentAccelerationY());
+    public static void updateAvgFilteredY() {
+        avgFilteredAy = signalProcessorY.averageFilterWithConstantNoise(MobileSensors.getCurrentAccelerationY());
     }
 
-    public static void updateAvgFilteredZ(){
-        avgFilteredAz =signalProcessorZ.averageFilterWithConstantNoise(MobileSensors.getCurrentAccelerationZ());
+    public static void updateAvgFilteredZ() {
+        avgFilteredAz = signalProcessorZ.averageFilterWithConstantNoise(MobileSensors.getCurrentAccelerationZ());
     }
 
-    public static void updateHighPassFilteredZ(){
+    public static void updateHighPassFilteredZ() {
         highPassFilteredAz = highPassSignalProcessorZ.averageFilter(MobileSensors.getCurrentAccelerationZ());
     }
 
 
-
-    public static void updateRms(){
-        rms= Math.sqrt(Math.pow(MobileSensors.getCurrentAccelerationX(),2)
-                +Math.pow(MobileSensors.getCurrentAccelerationY(),2)+
-                Math.pow(MobileSensors.getCurrentAccelerationZ(),2));
+    public static void updateRms() {
+        rms = Math.sqrt(Math.pow(MobileSensors.getCurrentAccelerationX(), 2)
+                + Math.pow(MobileSensors.getCurrentAccelerationY(), 2) +
+                Math.pow(MobileSensors.getCurrentAccelerationZ(), 2));
     }
 
 
-
-    public static void updateIRI(){
+    public static void updateIRI() {
 
         /**
          * get avgFilteredZ for this method input.
@@ -216,22 +198,20 @@ public class SensorDataProcessor {
          * only if avg filtering is updating,
          */
         //double k = getReorientedAy();
-        if (getReorientedAy() > 9.5){
-            //iriCalculator.processIRI_usingSlope(getReorientedAy());
+        if (getReorientedAy() > 9.5) {
             iri = iriCalculator.processIRI_using_aWindow(getReorientedAy());
-            //iri = iriCalculator.processIRI_using_mean_and_standard_deviation(getReorientedAy());
-
         }
     }
 
     /**
      * gives vehicle speed using obd if obd available in the vehicle else using GPS.
+     *
      * @return
      */
-    public static double vehicleSpeed(){
+    public static double vehicleSpeed() {
         String check = SensorData.getMobdSpeed(); // checks wether obd exists
-        if(check == null) {
-            double speed =  MobileSensors.getGpsSpeed();// gets GPS speed
+        if (check == null) {
+            double speed = MobileSensors.getGpsSpeed();// gets GPS speed
             return speed;
         } else {
             double speed = Double.parseDouble(SensorData.getMobdSpeed());// gets OBD speed
@@ -242,19 +222,19 @@ public class SensorDataProcessor {
     /**
      * conduct precalculations when vehicle is stopped.
      */
-    public static void stableOperation(){
+    public static void stableOperation() {
         double speed = SensorDataProcessor.vehicleSpeed();
-        if(speed < 2.0){
+        if (speed < 2.0) {
             signalProcessorXReoriented.setConstantFactor(reorientedAxWithNoise);// collects
             // constant noise
             signalProcessorYReoriented.setConstantFactor(reorientedAyWithNoise - 9.8);
             signalProcessorZReoriented.setConstantFactor(reorientedAzWithNoise);
-            if (nericellReorientation){
-                ((NericellMechanism)reorientation).setStable(true); // calculates euler angles
+            if (nericellReorientation) {
+                ((NericellMechanism) reorientation).setStable(true); // calculates euler angles
             }
         } else {
-            if (nericellReorientation){
-                ((NericellMechanism)reorientation).setStable(false);
+            if (nericellReorientation) {
+                ((NericellMechanism) reorientation).setStable(false);
             }
         }
     }

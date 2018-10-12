@@ -1,22 +1,5 @@
 package com.codemo.www.iroads;
 
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.net.Uri;
-import android.os.Build;
-import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.telephony.TelephonyManager;
-import android.view.View;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -27,6 +10,8 @@ import android.content.pm.PackageManager;
 import android.graphics.drawable.Icon;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -34,19 +19,24 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.codemo.www.iroads.Database.DatabaseHandler;
@@ -56,14 +46,12 @@ import com.codemo.www.iroads.Fragments.GraphFragment;
 import com.codemo.www.iroads.Fragments.HelpFragment;
 import com.codemo.www.iroads.Fragments.HomeFragment;
 import com.codemo.www.iroads.Fragments.SettingsFragment;
-import com.codemo.www.iroads.Fragments.TaggerFragment;
 import com.codemo.www.iroads.Reorientation.ReorientationType;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.model.LatLng;
 import com.pathsense.android.sdk.location.PathsenseLocationProviderApi;
 import com.vatichub.obd2.OBD2CoreConfiguration;
 import com.vatichub.obd2.OBD2CoreConstants;
@@ -77,11 +65,8 @@ import com.vatichub.obd2.realtime.OBD2SiddhiAgentManager;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -93,52 +78,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         GoogleApiClient.OnConnectionFailedListener,
         com.google.android.gms.location.LocationListener, OBD2EventListener {
 
-    private FragmentManager manager;
-    private FragmentTransaction transaction;
-    private MapFragment mapFragment;
-
-    private GoogleApiClient mGoogleApiClient;
-    private Location mLocation;
-    private LocationManager mLocationManager;
-    private LocationRequest mLocationRequest;
-    private com.google.android.gms.location.LocationListener listener;
-    private long UPDATE_INTERVAL = 2 * 1000;  /* 10 secs */
-    private long FASTEST_INTERVAL = 2000; /* 2 sec */
-
-    private LocationManager locationManager;
-
-    private static final int REQUEST_ENABLE_BT = 2;
     public static final int MESSAGE_STATE_CHANGE = 1;
     public static final int MESSAGE_TOAST = 5;
     public static final int MESSAGE_OK = 200;
-
     public static final String DEVICE_NAME = "device_name";
     public static final String TOAST = "toast";
     public static final String CAR_CONNECTED = "car_connected";
-
     public static final String CAR_CONNECTED_STATUS = "car_connected";
-
+    private static final int REQUEST_ENABLE_BT = 2;
     private static final int REQUEST_CONNECT_DEVICE = 1;
-
-    private BluetoothAdapter mBluetoothAdapter;
-    private IroadsConfiguration gconfigs;
-    private Timer btconnectAttemptScheduler;
-    private boolean attemptScheduled = false;
-    private int btConnectAttemptsRemaining = 5;
-    private boolean proceedAttemptCycle = true;
-
-    private BluetoothCommandService mCommandService;
     private static final int REQUEST_ENABLE_BT_PLUS_CONNECT_DEVICE = 5;
-    private Menu mainMenu;
-    private Context context;
-    private BottomNavigationView navigation;
-    private boolean inHome = true;
-    private Icon homeIcon;
-    private Thread fakethread;
-
-    private DatabaseHandler dbHandler;
-    private boolean gpsEnabled;
-    private Runnable handlerTask;
+    private static final String TAG = "MainActivity";
     private static boolean replicationStopped = true;
     private static ProgressBar spinnerObd;
     private static ProgressBar spinnerSave;
@@ -147,8 +97,119 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private static ImageButton bConnectBtn;
     private static MainActivity activity;
     private static int counter;
+    private FragmentManager manager;
+    private FragmentTransaction transaction;
+    private MapFragment mapFragment;
+    private GoogleApiClient mGoogleApiClient;
+    private Location mLocation;
+    private LocationManager mLocationManager;
+    private LocationRequest mLocationRequest;
+    private com.google.android.gms.location.LocationListener listener;
+    private long UPDATE_INTERVAL = 2 * 1000;  /* 10 secs */
+    private long FASTEST_INTERVAL = 2000; /* 2 sec */
+    private LocationManager locationManager;
+    private BluetoothAdapter mBluetoothAdapter;
+    private IroadsConfiguration gconfigs;
+    private Timer btconnectAttemptScheduler;
+    private boolean attemptScheduled = false;
+    private int btConnectAttemptsRemaining = 5;
+    private boolean proceedAttemptCycle = true;
+    private final Handler mHandler = new Handler() {
+
+        @Override
+        public void handleMessage(Message msg) {
+
+            switch (msg.what) {
+                case MESSAGE_STATE_CHANGE:
+                    switch (msg.arg1) {
+                        case BluetoothCommandService.STATE_CONNECTED_ELM:
+
+//                            indicatorELM.setImageResource(R.drawable.elm_ok);
+                            if (msg.getData() != null && msg.getData().containsKey(DEVICE_NAME)) {
+                                String mConnectedDeviceName = msg.getData().getString(DEVICE_NAME);
+                                Toast.makeText(getApplicationContext(), "Connected to "
+                                        + mConnectedDeviceName, Toast.LENGTH_SHORT).show();
+                            }
+
+                            //resetting bluetooth connection re-attempt tasks
+                            String attempts = gconfigs.getSetting("max_bt_attempts", Constants.MAX_BT_CONNECT_ATTEMPTS_DEFAULT + "");
+                            btConnectAttemptsRemaining = Integer.parseInt(attempts);
+                            proceedAttemptCycle = true;
+
+                            break;
+                        case BluetoothCommandService.STATE_CONNECTED_VINLI:
+//                            indicatorELM.setImageResource(R.drawable.vinli_ok);
+                            break;
+
+                        case BluetoothCommandService.STATE_CONNECTED_CAR:
+                            int carConnectedStatus = msg.getData().getInt(CAR_CONNECTED_STATUS);
+                            if (carConnectedStatus == MESSAGE_OK) {
+//                                indicatorCar.setImageResource(R.drawable.car_ok);
+                                // tripLogCalculator.resetTrip();
+                            } else {
+//                                indicatorCar.setImageResource(R.drawable.car_no);
+                            }
+                            break;
+                        case BluetoothCommandService.STATE_CONNECTING:
+                            break;
+                        case BluetoothCommandService.STATE_LISTEN:
+                        case BluetoothCommandService.STATE_NONE:
+                            //tripLogCalculator.endTrip();
+
+                            boolean autoconnect = Boolean.valueOf(gconfigs.getSetting("bt_autoconnect", Constants.BT_AUTOCONNECT_DEFAULT + ""));
+                            if (autoconnect && proceedAttemptCycle && !attemptScheduled) {
+                                String lastSuccessfulConnectBTAddr = OBD2CoreConfiguration.getInstance().getSetting(OBD2CoreConstants.LAST_CONNECTED_BT_ADDR);
+                                btconnectAttemptScheduler.cancel();
+                                btconnectAttemptScheduler = new Timer();
+                                TimerTask attemptTask = new BTConnectAttemptTask(lastSuccessfulConnectBTAddr, btconnectAttemptScheduler);
+                                btconnectAttemptScheduler.schedule(attemptTask, 10000);
+                                attemptScheduled = true;
+                            }
+                            break;
+                    }
+                    break;
+            }
+        }
+    };
+    private BluetoothCommandService mCommandService;
+    private Menu mainMenu;
+    private Context context;
+    private BottomNavigationView navigation;
+    private boolean inHome = true;
+    private Icon homeIcon;
+    private Thread fakethread;
+    private DatabaseHandler dbHandler;
+    private boolean gpsEnabled;
+    private Runnable handlerTask;
     private PathsenseLocationProviderApi api;
-    private static final String TAG = "MainActivity";
+    private AlertDialog dialog;
+    private AlertDialog.Builder dialogBuilder;
+
+    public static boolean isReplicationStopped() {
+        return replicationStopped;
+    }
+
+    public static void setReplicationStopped(boolean replicationStarteds) {
+        replicationStopped = replicationStarteds;
+    }
+
+    public static void startSaving() {
+        spinnerSave.setVisibility(View.VISIBLE);
+        saveBtn.setEnabled(false);
+    }
+
+    public static void stopSaving() {
+        spinnerSave.setVisibility(View.GONE);
+        saveBtn.setEnabled(true);
+    }
+
+    public static boolean isAutoSaveON() {
+        return autoSaveON;
+    }
+
+    public static void setAutoSaveON(boolean autoSaveON) {
+        MainActivity.autoSaveON = autoSaveON;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -209,19 +270,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         //Register Event Listeners
         OBD2EventManager obd2EventManager = OBD2EventManager.getInstance();
-//      obd2EventManager.registerOBD2EventListener(GraphManager.getInstance());
         obd2EventManager.registerOBD2EventListener(OBD2SiddhiAgentManager.getInstance());
         obd2EventManager.registerOBD2EventListener(this);
-
-//        boolean autoconnect = Boolean.valueOf(gconfigs.getSetting( "bt_autoconnect", Constants.BT_AUTOCONNECT_DEFAULT+""));
-//        if(autoconnect){
-//            btconnectAttemptScheduler = new Timer();
-//            String lastSuccessfulConnectBTAddr = OBD2CoreConfiguration.getInstance().getSetting(OBD2CoreConstants.LAST_CONNECTED_BT_ADDR);
-//            if(lastSuccessfulConnectBTAddr != null){
-//                TimerTask attemptTask = new BTConnectAttemptTask(lastSuccessfulConnectBTAddr,btconnectAttemptScheduler);
-//                btconnectAttemptScheduler.schedule(attemptTask,7000);
-//            }
-//        }
 
         ArrayList<String> pids = gconfigs.getPidsSetting();
         for (int i = 0; i < pids.size(); i++) {
@@ -268,7 +318,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
         dbHandler = new DatabaseHandler(getApplicationContext());
 
-        if(checkAndRequestPermissions()){
+        if (checkAndRequestPermissions()) {
             saveDeviceId();
         }
 
@@ -276,20 +326,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         api.requestInVehicleLocationUpdates(PathsenseInVehicleReceiver.class);
         api.requestActivityUpdates(PathsenseInVehicleReceiver.class);
 
-//        TextView webLink = (TextView) findViewById(R.id.webLink);
-//        webLink.setOnClickListener(new TextView.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent browserIntent = new
-//                        Intent(Intent.ACTION_VIEW,
-//                        Uri.parse(getString(R.string.page_address)));
-//                startActivity(browserIntent);
-//            }
-//        });
-
     }
-
-
 
     @Override
     protected void onDestroy() {
@@ -299,7 +336,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public void saveDeviceId() {
         String serial = Build.SERIAL;
-        Log.d("TAG","inside DeviceID");
+        Log.d("TAG", "inside DeviceID");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
                 // TODO: Consider calling
@@ -308,10 +345,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             serial = Build.getSerial();
         }
         String device_name = Build.BRAND + " " + Build.MODEL;
-        Log.d("TAG","Device properties: " + device_name + " " + serial);
+        Log.d("TAG", "Device properties: " + device_name + " " + serial);
         SensorData.setDeviceId(String.valueOf(serial.hashCode()));
         SensorData.setModel(device_name);
-        Log.d(TAG,"--------------- DeviceId --------- /// "+ SensorData.getDeviceId());
+        Log.d(TAG, "--------------- DeviceId --------- /// " + SensorData.getDeviceId());
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -326,7 +363,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (id == R.id.nav_chart) {
             NavigationHandler.navigateTo("graphFragment");
         } else if (id == R.id.nav_obd) {
-        NavigationHandler.navigateTo("homeFragment");
+            NavigationHandler.navigateTo("homeFragment");
         } else if (id == R.id.nav_settings) {
             NavigationHandler.navigateTo("settingsFragment");
         } else if (id == R.id.nav_help) {
@@ -338,38 +375,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
-    public void startTimer(){
+    public void startTimer() {
         Handler handler = new Handler();
-        handlerTask = new Runnable()
-        {
+        handlerTask = new Runnable() {
             @Override
             public void run() {
-                // handle automatic saving when journey started
-//                if(GraphFragment.isStarted()) {
                 if (isAutoSaveON() && isInternetAvailable()) {
-                    Log.d(TAG,"--------------- internet --------- /// "+isInternetAvailable());
-//                    Log.d(TAG,"--------------- auto save is ON--------- /// ");
+                    Log.d(TAG, "--------------- internet --------- /// " + isInternetAvailable());
                     if (isReplicationStopped()) {
-                        counter ++;
-                        if(counter > 8){
-//                            Log.d(TAG,"--------------- replication is stopped --------- /// ");
+                        counter++;
+                        if (counter > 8) {
                             dbHandler.startReplication();
                             startSaving();
-                            if(!isGpsEnabled()){
+                            if (!isGpsEnabled()) {
                                 checkLocation();
                             }
                             setReplicationStopped(false);
                             counter = 0;
                         }
                     } else {
-                        Log.d(TAG,"--------------- replicating ............. --------- /// ");
+                        Log.d(TAG, "--------------- replicating ............. --------- /// ");
                     }
                 }
-//                }
-                // handle ui when sync up is over
-                if(isReplicationStopped()){
+                if (isReplicationStopped()) {
                     stopSaving();
-//                    Log.d(TAG,"--------------- Saving stopped --------- /// ");
                 }
                 handler.postDelayed(handlerTask, 5000);
             }
@@ -382,8 +411,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return cm.getActiveNetworkInfo() != null;
     }
 
-
-
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
@@ -395,7 +422,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         startTimer();
     }
 
-    public MapFragment  initMap() {
+    public MapFragment initMap() {
         mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.mapFragment);
         return mapFragment;
     }
@@ -407,18 +434,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private boolean checkLocation() {
         setGpsEnabled(isLocationEnabled());
-        if(!isGpsEnabled())
+        if (!isGpsEnabled())
             showAlert();
         return isGpsEnabled();
     }
 
-
-
     private void showAlert() {
-        final AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-        dialog.setTitle("Enable Location")
-                .setMessage("Please Enable Location to " +
-                        "use this app")
+        if(dialog != null){
+            if(dialog.isShowing()){
+                return;
+            }
+        }
+        dialogBuilder = new AlertDialog.Builder(this)
+                .setTitle("Enable Location")
+                .setMessage("To continue, Please turn on device location.")
                 .setPositiveButton("Location Settings", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface paramDialogInterface, int paramInt) {
@@ -433,7 +462,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                     }
                 });
-        dialog.show();
+        dialogBuilder.setCancelable(false);
+        dialog = dialogBuilder.show();
     }
 
     private boolean isLocationEnabled() {
@@ -449,27 +479,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 ActivityCompat.checkSelfPermission(this,
                         android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
             return;
         }
 
         startLocationUpdates();
-
         mLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-
-        if(mLocation == null){
+        if (mLocation == null) {
             startLocationUpdates();
         }
         if (mLocation != null) {
             HomeController.updateLocation(mLocation);
-
         } else {
-//            Toast.makeText(this, "Location not Detected", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -490,29 +510,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (mGoogleApiClient != null) {
             mGoogleApiClient.connect();
         }
-
         // If BT is not on, request that it be enabled.
         // setupCommand() will then be called during onActivityResult
         if (!mBluetoothAdapter.isEnabled()) {
-//            boolean autoenable = Boolean.valueOf(gconfigs.getSetting("bt_auto_enable", Constants
-//                    .BT_AUTO_ENABLE_DEFAULT + ""));
-//            if (autoenable) {
-//                mBluetoothAdapter.enable();
-//                if (mCommandService == null)
-//                    setupCommand();
-//            } else {
-//                Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-//                startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
-//            }
         }
         // otherwise set up the command service
         else {
-            if (mCommandService == null){
+            if (mCommandService == null) {
                 setupCommand();
             }
 
         }
-
 
 
     }
@@ -537,22 +545,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 ActivityCompat.checkSelfPermission(this,
                         android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            Log.d("iemi exception", "--->>>> imei no ermission graned ------------------------");
+            Log.d("iemi exception", "--->>>> imei no permission granted ------------------------");
             return;
         }
         LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient,
                 mLocationRequest, this);
         Log.d("reque", "--->>>>");
     }
-
-
-
 
     private void setupCommand() {
         // Initialize the BluetoothChatService to perform bluetooth connections
@@ -561,22 +560,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.d("ActivityResult=====","Result received======================================="+resultCode);
+        Log.d("ActivityResult=====", "Result received=======================================" + resultCode);
         switch (requestCode) {
-            case  REQUEST_CONNECT_DEVICE:
+            case REQUEST_CONNECT_DEVICE:
                 // When DeviceListActivity returns with a device to connect
                 if (resultCode == Activity.RESULT_OK) {
                     // Get the device MAC address
                     String address = data.getExtras()
                             .getString(DeviceListActivity.EXTRA_DEVICE_ADDRESS);
                     boolean manualConnect = data.getExtras().getBoolean(DeviceListActivity.MANUAL_CONNECT);
-
-
-
-                    if(manualConnect){ //user manually try to connect the app to a device
+                    if (manualConnect) { //user manually try to connect the app to a device
                         proceedAttemptCycle = false; //stop auto connecting
                     }
-
 
                     // Get the BLuetoothDevice object
                     BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
@@ -607,85 +602,36 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     Toast.makeText(this, context.getString(R.string.bluetooth_not_enabled), Toast.LENGTH_SHORT).show();
                 }
                 break;
-
         }
     }
 
-
-
-
-
     @Override
     public void receiveOBD2Event(OBD2Event e) {
-//        Log.d("DATA=============",e.toString());
-
         try {
-            JSONObject realTimedata=e.getEventData().getJSONObject("obd2_real_time_data");
-            JSONObject speedObject=realTimedata.getJSONObject("obd2_speed");
-            JSONObject rpmObject=realTimedata.getJSONObject("obd2_engine_rpm");
-            Double speed=speedObject.getDouble("value");
-            Double rpm=rpmObject.getDouble("value");
+            JSONObject realTimedata = e.getEventData().getJSONObject("obd2_real_time_data");
+            JSONObject speedObject = realTimedata.getJSONObject("obd2_speed");
+            JSONObject rpmObject = realTimedata.getJSONObject("obd2_engine_rpm");
+            Double speed = speedObject.getDouble("value");
+            Double rpm = rpmObject.getDouble("value");
             SensorData.setMobdRpm(Double.toString(rpm));
             SensorData.setMobdSpeed(Double.toString(speed));
             HomeController.updateOBD2Data(speed.intValue(), rpm.intValue());
         } catch (JSONException e1) {
-            Log.d("OBD2DATA",e1.getMessage());
+            Log.d("OBD2DATA", e1.getMessage());
 
         }
 
     }
 
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        // Inflate the menu; this adds items to the action bar if it is present.
-//        getMenuInflater().inflate(R.menu.main, menu);
-//        this.mainMenu = menu;
-//        return true;
-//    }
-
-
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item)
-//    {
-//
-//        switch (item.getItemId())
-//        {
-//            case R.id.btconnect:
-//
-//                if (!mBluetoothAdapter.isEnabled()) {
-//                    Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-//                    startActivityForResult(enableIntent, REQUEST_ENABLE_BT_PLUS_CONNECT_DEVICE);
-//                }else{
-//                    // Launch the DeviceListActivity to see devices and do scan
-//                    Intent serverIntent = new Intent(this, DeviceListActivity.class);
-//                    startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE);
-//                }
-//                return true;
-//
-//            default:
-//                return super.onOptionsItemSelected(item);
-//        }
-//    }
-
-    public void onConnectBtn(){
+    public void onConnectBtn() {
         if (!mBluetoothAdapter.isEnabled()) {
             Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableIntent, REQUEST_ENABLE_BT_PLUS_CONNECT_DEVICE);
-        }else{
+        } else {
             // Launch the DeviceListActivity to see devices and do scan
             Intent serverIntent = new Intent(this, DeviceListActivity.class);
             startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE);
-
         }
-
-    }
-
-    public static boolean isReplicationStopped() {
-        return replicationStopped;
-    }
-
-    public static void setReplicationStopped(boolean replicationStarteds) {
-        replicationStopped = replicationStarteds;
     }
 
     public boolean isGpsEnabled() {
@@ -696,198 +642,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         this.gpsEnabled = gpsEnabled;
     }
 
-
-    class BTConnectAttemptTask extends TimerTask {
-
-        private String address;
-        private Timer scheduler;
-
-        public BTConnectAttemptTask(String address, Timer scheduler) {
-            this.address = address;
-            this.scheduler = scheduler;
-        }
-
-        @Override
-        public void run() {
-            attemptScheduled = false;
-            scheduler.cancel();
-
-            if(btConnectAttemptsRemaining>0){
-                btConnectAttemptsRemaining--;
-            }else{
-                proceedAttemptCycle = false;
-            }
-
-            boolean autoconnect = Boolean.valueOf(gconfigs.getSetting("bt_autoconnect", Constants.BT_AUTOCONNECT_DEFAULT+""));
-
-            if(mCommandService != null && !gconfigs.isExitting()){
-                int mState = mCommandService.getState();
-                if(autoconnect && proceedAttemptCycle && (mState== BluetoothCommandService.STATE_NONE || mState == BluetoothCommandService.STATE_LISTEN)){
-                    Intent data = new Intent();
-                    data.putExtra(DeviceListActivity.EXTRA_DEVICE_ADDRESS, address);
-                    data.putExtra(DeviceListActivity.MANUAL_CONNECT, false);
-                    MainActivity.this.onActivityResult(REQUEST_CONNECT_DEVICE, Activity.RESULT_OK, data);
-                }
-            }
-
-        }
-
-    }
-
-
-
-
-
-
-    private final Handler mHandler = new Handler() {
-
-        @Override
-        public void handleMessage(Message msg) {
-
-            switch (msg.what) {
-                case MESSAGE_STATE_CHANGE:
-                    switch (msg.arg1) {
-                        case BluetoothCommandService.STATE_CONNECTED_ELM:
-
-//                            indicatorELM.setImageResource(R.drawable.elm_ok);
-                            if (msg.getData()!= null && msg.getData().containsKey(DEVICE_NAME)) {
-                                String mConnectedDeviceName = msg.getData().getString(DEVICE_NAME);
-                                Toast.makeText(getApplicationContext(), "Connected to "
-                                        + mConnectedDeviceName, Toast.LENGTH_SHORT).show();
-                            }
-
-                            //resetting bluetooth connection re-attempt tasks
-                            String attempts = gconfigs.getSetting("max_bt_attempts", Constants.MAX_BT_CONNECT_ATTEMPTS_DEFAULT + "");
-                            btConnectAttemptsRemaining = Integer.parseInt(attempts);
-                            proceedAttemptCycle = true;
-
-                            break;
-                        case BluetoothCommandService.STATE_CONNECTED_VINLI:
-//                            indicatorELM.setImageResource(R.drawable.vinli_ok);
-                            break;
-
-                        case BluetoothCommandService.STATE_CONNECTED_CAR:
-                            int carConnectedStatus = msg.getData().getInt(CAR_CONNECTED_STATUS);
-                            if(carConnectedStatus==MESSAGE_OK){
-//                                indicatorCar.setImageResource(R.drawable.car_ok);
-                                // tripLogCalculator.resetTrip();
-                            }else{
-//                                indicatorCar.setImageResource(R.drawable.car_no);
-                            }
-                            break;
-                        case BluetoothCommandService.STATE_CONNECTING:
-                            break;
-                        case BluetoothCommandService.STATE_LISTEN:
-                        case BluetoothCommandService.STATE_NONE:
-                            //tripLogCalculator.endTrip();
-
-                            boolean autoconnect = Boolean.valueOf(gconfigs.getSetting("bt_autoconnect", Constants.BT_AUTOCONNECT_DEFAULT+""));
-                            if(autoconnect && proceedAttemptCycle && !attemptScheduled){
-                                String lastSuccessfulConnectBTAddr = OBD2CoreConfiguration.getInstance().getSetting(OBD2CoreConstants.LAST_CONNECTED_BT_ADDR);
-                                btconnectAttemptScheduler.cancel();
-                                btconnectAttemptScheduler = new Timer();
-                                TimerTask attemptTask = new BTConnectAttemptTask(lastSuccessfulConnectBTAddr,btconnectAttemptScheduler);
-                                btconnectAttemptScheduler.schedule(attemptTask , 10000);
-                                attemptScheduled = true;
-                            }
-
-                            //sendBulkData();
-
-                            break;
-                    }
-                    break;
-
-            }
-        }
-    };
-
-
-    class BTServiceConnectionHandler implements BTServiceCallback {
-
-        @Override
-        public void onStateChanged(int oldState, int newState, BluetoothDevice device) {
-            //mHandler.obtainMessage(MainActivity.MESSAGE_STATE_CHANGE, newState, -1).sendToTarget();
-        }
-
-        @Override
-        public void onConnecting(BluetoothDevice device) {
-            Message msg = mHandler.obtainMessage(MainActivity.MESSAGE_TOAST);
-            Bundle bundle = new Bundle();
-            bundle.putString(MainActivity.TOAST, "Connecting to " + device.getName());
-            msg.setData(bundle);
-            mHandler.sendMessage(msg);
-        }
-
-        @Override
-        public void onConnectedDevice(BluetoothDevice device) {
-            Message msg = mHandler.obtainMessage(MainActivity.MESSAGE_STATE_CHANGE,
-                    BluetoothCommandService.STATE_CONNECTED_ELM, -1);
-            Bundle bundle = new Bundle();
-            bundle.putString(DEVICE_NAME, device.getName());
-            msg.setData(bundle);
-            mHandler.sendMessage(msg);
-        }
-
-        @Override
-        public void onConnectedCar() {
-            Message msg = mHandler
-                    .obtainMessage(MainActivity.MESSAGE_STATE_CHANGE,
-                            BluetoothCommandService.STATE_CONNECTED_CAR, -1);
-            Bundle bundle = new Bundle();
-            bundle.putInt(MainActivity.CAR_CONNECTED, MainActivity.MESSAGE_OK);
-            msg.setData(bundle);
-            mHandler.sendMessage(msg);
-        }
-
-        @Override
-        public void onDisconnected(BluetoothDevice device, Map<String, Object> args) {
-            mHandler.obtainMessage(MainActivity.MESSAGE_STATE_CHANGE,
-                    BluetoothCommandService.STATE_NONE, -1).sendToTarget();
-            gconfigs.sendToastToUI("Disconnected! Reason  : " + args.get(BluetoothCommandService.ARGS_REASON));
-        }
-
-        @Override
-        public void onConnectionFailed(BluetoothDevice device) {
-            Message msg = mHandler.obtainMessage(MainActivity.MESSAGE_TOAST);
-            Bundle bundle = new Bundle();
-            bundle.putString(MainActivity.TOAST, "Unable to connect device " + device.getName());
-            msg.setData(bundle);
-            mHandler.sendMessage(msg);
-            mHandler.obtainMessage(MainActivity.MESSAGE_STATE_CHANGE,
-                    BluetoothCommandService.STATE_NONE, -1).sendToTarget();
-        }
-
-        @Override
-        public void onConnectionLost(BluetoothDevice device) {
-            Message msg = mHandler.obtainMessage(MainActivity.MESSAGE_TOAST);
-            Bundle bundle = new Bundle();
-            bundle.putString(MainActivity.TOAST, "Connection was lost with device " + device.getName());
-            msg.setData(bundle);
-            mHandler.sendMessage(msg);
-            mHandler.obtainMessage(MainActivity.MESSAGE_STATE_CHANGE,
-                    BluetoothCommandService.STATE_NONE, -1).sendToTarget();
-        }
-
-    }
-
     private boolean checkAndRequestPermissions() {
         int phonestate = ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_PHONE_STATE);
         int location = ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION);
-//        int permissionLocation = ContextCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
-
-
         List<String> listPermissionsNeeded = new ArrayList<>();
-
-
         if (phonestate != PackageManager.PERMISSION_GRANTED) {
             listPermissionsNeeded.add(android.Manifest.permission.READ_PHONE_STATE);
         }
         if (location != PackageManager.PERMISSION_GRANTED) {
             listPermissionsNeeded.add(android.Manifest.permission.ACCESS_FINE_LOCATION);
         }
-//        if (permissionLocation != PackageManager.PERMISSION_GRANTED) {
-//            listPermissionsNeeded.add(android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
-//        }
         if (!listPermissionsNeeded.isEmpty()) {
             ActivityCompat.requestPermissions(this, listPermissionsNeeded.toArray(new String[listPermissionsNeeded.size()]), 1);
             return false;
@@ -895,17 +659,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
-
-
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {
-
         switch (requestCode) {
             case 1: {
-
                 Map<String, Integer> perms = new HashMap<>();
-
                 perms.put(android.Manifest.permission.READ_PHONE_STATE, PackageManager.PERMISSION_GRANTED);
                 perms.put(android.Manifest.permission.ACCESS_FINE_LOCATION, PackageManager.PERMISSION_GRANTED);
 //                perms.put(android.Manifest.permission.WRITE_EXTERNAL_STORAGE, PackageManager.PERMISSION_GRANTED);
@@ -917,21 +676,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     // Check for both permissions
                     if (
                             perms.get(android.Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED &&
-                             perms.get(android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                                    perms.get(android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
 //                            && perms.get(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
                             ) {
                         Log.d(TAG, "phone & location services permission granted");
-
-                        // here you can do your logic all Permission Success Call
-//                        moveToNxtScreen();
-
                     } else {
                         Log.d(TAG, "Some permissions are not granted ask again ");
                         if (
                                 ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.READ_PHONE_STATE) ||
-                                ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
+                                        ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
 //                              ||  ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                        ){
+                                ) {
                             showDialogOK("Some Permissions are required to use this application",
                                     new DialogInterface.OnClickListener() {
                                         @Override
@@ -1032,32 +787,109 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-//        if (id == R.id.action_settings) {
-//            return true;
-//        }
-
         return super.onOptionsItemSelected(item);
     }
 
-    public static void startSaving(){
-        spinnerSave.setVisibility(View.VISIBLE);
-//        saveBtn.setColorFilter(ContextCompat.getColor(activity.getApplicationContext(), R.color.colorIconBlack));
-        saveBtn.setEnabled(false);
+    class BTConnectAttemptTask extends TimerTask {
+
+        private String address;
+        private Timer scheduler;
+
+        public BTConnectAttemptTask(String address, Timer scheduler) {
+            this.address = address;
+            this.scheduler = scheduler;
+        }
+
+        @Override
+        public void run() {
+            attemptScheduled = false;
+            scheduler.cancel();
+
+            if (btConnectAttemptsRemaining > 0) {
+                btConnectAttemptsRemaining--;
+            } else {
+                proceedAttemptCycle = false;
+            }
+
+            boolean autoconnect = Boolean.valueOf(gconfigs.getSetting("bt_autoconnect", Constants.BT_AUTOCONNECT_DEFAULT + ""));
+
+            if (mCommandService != null && !gconfigs.isExitting()) {
+                int mState = mCommandService.getState();
+                if (autoconnect && proceedAttemptCycle && (mState == BluetoothCommandService.STATE_NONE || mState == BluetoothCommandService.STATE_LISTEN)) {
+                    Intent data = new Intent();
+                    data.putExtra(DeviceListActivity.EXTRA_DEVICE_ADDRESS, address);
+                    data.putExtra(DeviceListActivity.MANUAL_CONNECT, false);
+                    MainActivity.this.onActivityResult(REQUEST_CONNECT_DEVICE, Activity.RESULT_OK, data);
+                }
+            }
+        }
     }
 
-    public static void stopSaving(){
-        spinnerSave.setVisibility(View.GONE);
-//        saveBtn.setColorFilter(ContextCompat.getColor(activity.getApplicationContext(), R.color.colorWhite));
-        saveBtn.setEnabled(true);
-    }
+    class BTServiceConnectionHandler implements BTServiceCallback {
 
-    public static boolean isAutoSaveON() {
-        return autoSaveON;
-    }
+        @Override
+        public void onStateChanged(int oldState, int newState, BluetoothDevice device) {
+            //mHandler.obtainMessage(MainActivity.MESSAGE_STATE_CHANGE, newState, -1).sendToTarget();
+        }
 
-    public static void setAutoSaveON(boolean autoSaveON) {
-        MainActivity.autoSaveON = autoSaveON;
+        @Override
+        public void onConnecting(BluetoothDevice device) {
+            Message msg = mHandler.obtainMessage(MainActivity.MESSAGE_TOAST);
+            Bundle bundle = new Bundle();
+            bundle.putString(MainActivity.TOAST, "Connecting to " + device.getName());
+            msg.setData(bundle);
+            mHandler.sendMessage(msg);
+        }
+
+        @Override
+        public void onConnectedDevice(BluetoothDevice device) {
+            Message msg = mHandler.obtainMessage(MainActivity.MESSAGE_STATE_CHANGE,
+                    BluetoothCommandService.STATE_CONNECTED_ELM, -1);
+            Bundle bundle = new Bundle();
+            bundle.putString(DEVICE_NAME, device.getName());
+            msg.setData(bundle);
+            mHandler.sendMessage(msg);
+        }
+
+        @Override
+        public void onConnectedCar() {
+            Message msg = mHandler
+                    .obtainMessage(MainActivity.MESSAGE_STATE_CHANGE,
+                            BluetoothCommandService.STATE_CONNECTED_CAR, -1);
+            Bundle bundle = new Bundle();
+            bundle.putInt(MainActivity.CAR_CONNECTED, MainActivity.MESSAGE_OK);
+            msg.setData(bundle);
+            mHandler.sendMessage(msg);
+        }
+
+        @Override
+        public void onDisconnected(BluetoothDevice device, Map<String, Object> args) {
+            mHandler.obtainMessage(MainActivity.MESSAGE_STATE_CHANGE,
+                    BluetoothCommandService.STATE_NONE, -1).sendToTarget();
+            gconfigs.sendToastToUI("Disconnected! Reason  : " + args.get(BluetoothCommandService.ARGS_REASON));
+        }
+
+        @Override
+        public void onConnectionFailed(BluetoothDevice device) {
+            Message msg = mHandler.obtainMessage(MainActivity.MESSAGE_TOAST);
+            Bundle bundle = new Bundle();
+            bundle.putString(MainActivity.TOAST, "Unable to connect device " + device.getName());
+            msg.setData(bundle);
+            mHandler.sendMessage(msg);
+            mHandler.obtainMessage(MainActivity.MESSAGE_STATE_CHANGE,
+                    BluetoothCommandService.STATE_NONE, -1).sendToTarget();
+        }
+
+        @Override
+        public void onConnectionLost(BluetoothDevice device) {
+            Message msg = mHandler.obtainMessage(MainActivity.MESSAGE_TOAST);
+            Bundle bundle = new Bundle();
+            bundle.putString(MainActivity.TOAST, "Connection was lost with device " + device.getName());
+            msg.setData(bundle);
+            mHandler.sendMessage(msg);
+            mHandler.obtainMessage(MainActivity.MESSAGE_STATE_CHANGE,
+                    BluetoothCommandService.STATE_NONE, -1).sendToTarget();
+        }
+
     }
 }
