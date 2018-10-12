@@ -114,17 +114,12 @@ public class Constants {
 		DEFAULT_PARAMS.put("High Coolant Temperature Alert", "threshold:104");
 		DEFAULT_PARAMS.put("High Fuel Consumption Alert", "threshold:10");
 	}
-	//public static final String COOLANT_TEMP_DEFAULT_PARAMS = "threshold:Generate alert when above this value:104";
-	//public static final String FUEL_CONSUMPTION_DEFAULT_PARAMS = "threshold:Generate alert when above this value:104";
 	
 	//notification
 	public static final long[] NOTIFICATION_VIBRATE_PATTERN_DEFAULT = new long[] { 100, 500, 100, 200, 1000, 500, 100, 200, 1000};
 	public static final int NOTIFICATION_LIGHT_COLOR_DEFAULT = 0xffff0000;
 	public static final String ENABLE_SYSTEM_NOTIFICATIONS_DEFAULT = "true";;
 
-	//displays
-	//public static final String[] SINGLE_DISPLAYS_DEFAULT = {"Line_Graph:obd2_fuelrate"};
-	//public static final String[] DUAL_DISPLAYS_DEFAULT = {"Line_Graph:obd2_speed Line_Graph:obd2_engine_rpm"};
 	public static final String DISPLAYS_DEFAULT  = "Digital_Display:obd2_speed,Digital_Display:obd2_engine_rpm " +
 			"Line_Graph:obd2_engine_rpm,Dial_Display:obd2_engine_temp " +
 			"Line_Graph:obd2_engine_temp," +
@@ -146,18 +141,5 @@ public class Constants {
 
 	
 	//-- end default values
-	
-	public static boolean validateRootDataType(String datatype){
-		if (datatype.equals(OBDII_REAL_TIME_DATA)){
-			return true;
-		}else return false;
-	}
-	
-	public static boolean validateOBD2DataType(String datatype){
-		return true;
-//		if (datatype.equals(OBDII_SPEED) || datatype.equals(OBDII_RPM) || datatype.equals(OBDII_FUEL_RATE)){
-//			return true;
-//		}else return false;
-	}
 	
 }
