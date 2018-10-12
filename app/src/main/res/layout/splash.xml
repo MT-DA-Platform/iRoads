@@ -6,22 +6,10 @@
     android:layout_height="match_parent"
     tools:context="com.codemo.www.iroads.SplashScreen">
 
-    <!--<TextView-->
-        <!--android:id="@+id/codemoSplash"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_alignEnd="@+id/welcome"-->
-        <!--android:layout_alignParentTop="true"-->
-        <!--android:layout_alignRight="@+id/welcome"-->
-        <!--android:layout_marginTop="72dp"-->
-        <!--android:text="Codemo.Inc"-->
-        <!--android:textAppearance="@android:style/TextAppearance.Holo.Large" />-->
-
     <ImageView
-
         android:id="@+id/welcome"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         app:srcCompat="@mipmap/ic_launcher" />
@@ -32,19 +20,11 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/welcome"
         android:layout_centerHorizontal="true"
-        android:text="iROADS"
-        android:textAppearance="@android:style/TextAppearance.Holo.Large"
+        android:layout_marginTop="80dp"
+        android:text="iRoads"
+        android:textColor="@color/colorGreyLight"
+        android:textSize="36sp"
+        android:textStyle="bold|italic"
         android:visibility="invisible" />
-
-    <!--<TextView-->
-        <!--android:id="@+id/presentsSplash"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_alignEnd="@+id/codemoSplash"-->
-        <!--android:layout_alignRight="@+id/codemoSplash"-->
-        <!--android:layout_below="@+id/codemoSplash"-->
-        <!--android:layout_marginTop="11dp"-->
-        <!--android:text="presents"-->
-        <!--android:textAppearance="@style/TextAppearance.Design.Tab" />-->
 
 </RelativeLayout>
