@@ -10,7 +10,7 @@ The terms used in this Privacy Policy have the same meanings as in our Terms and
 
 **Information Collection and Use**
 
-For a better data analysis, we may require you to provide us with certain personally identifiable information, including but not limited to brand, model, serial number of your device and your GPS coordinates. The information that we request will be retained by us in a anonymous manner and used as described in this privacy policy.
+For a better data analysis, we may require you to provide us with certain personally identifiable information such as brand, model, serial number of your device. For identifying road anomalies and calculate International Roughness Index (IRI) we need to gather sensor data such as Accelerometer readings, Magnetometer readings and your GPS coordinates. The information that we request will be retained by us in a anonymous manner and used as described in this privacy policy.
 
 Link to privacy policy of third party service providers used by the app
 
