@@ -4,30 +4,21 @@ CODEMO built the iRoads app as a Free app. This SERVICE is provided by CODEMO at
 
 This page is used to inform visitors regarding our policies with the collection, use, and disclosure of Personal Information if anyone decided to use our Service.
 
-If you choose to use our Service, then you agree to the collection and use of information in relation to this policy. The Personal Information that we collect is used for providing and improving the Service. We will not use or share your information with anyone except as described in this Privacy Policy.
+If you choose to use our Service, then you agree to the collection and use of information in relation to this policy. The Personal Information that we collect is used only for the reasons include in below sections. We will not use or share your information with anyone except as described in this Privacy Policy.
 
 The terms used in this Privacy Policy have the same meanings as in our Terms and Conditions, which is accessible at iRoads unless otherwise defined in this Privacy Policy.
 
 **Information Collection and Use**
 
-For a better data analysis, we may require you to provide us with certain personally identifiable information such as brand, model, serial number of your device. For identifying road anomalies and calculate International Roughness Index (IRI) we need to gather sensor data such as Accelerometer readings, Magnetometer readings and your GPS coordinates. The information that we request will be retained by us in a anonymous manner and used as described in this privacy policy.
+For a better data analysis, we may require you to provide us with certain personally identifiable information such as brand, model, serial number of your device. For identifying road anomalies and calculate International Roughness Index (IRI) we need to gather sensor data such as Accelerometer readings, Magnetometer readings and your GPS coordinates. If available vehicular data from OBD2 adapters wil be gathered for observing fuel consumption. The information that we request will be retained by us in a anonymous manner and used as described in this privacy policy.
 
 Link to privacy policy of third party service providers used by the app
 
 *   [Google Play Services](https://www.google.com/policies/privacy/)
 
-**Log Data**
-
-We want to inform you that whenever you use our Service, in a case of an error in the app we collect data and information (through third party products) on your phone called Log Data. This Log Data may include information such as your device Internet Protocol (“IP”) address, device name, operating system version, the configuration of the app when utilizing our Service, the time and date of your use of the Service, and other statistics.
-
 **Service Providers**
 
-We may employ third-party companies and individuals due to the following reasons:
-
-*   To facilitate our Service;
-*   To provide the Service on our behalf;
-*   To perform Service-related services; or
-*   To assist us in analyzing how our Service is used.
+We may work with third-party companies and individuals to assist us in analyzing how our service is used.
 
 We want to inform users of this Service that these third parties have access to your Personal Information. The reason is to perform the tasks assigned to them on our behalf. However, they are obligated not to disclose or use the information for any other purpose.
 
