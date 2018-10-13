@@ -47,6 +47,7 @@ import com.codemo.www.iroads.Fragments.HelpFragment;
 import com.codemo.www.iroads.Fragments.HomeFragment;
 import com.codemo.www.iroads.Fragments.SettingsFragment;
 import com.codemo.www.iroads.Reorientation.ReorientationType;
+import com.github.javiersantos.appupdater.AppUpdater;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationRequest;
@@ -97,6 +98,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private static ImageButton bConnectBtn;
     private static MainActivity activity;
     private static int counter;
+    private static int checkCounter;
     private FragmentManager manager;
     private FragmentTransaction transaction;
     private MapFragment mapFragment;
@@ -184,6 +186,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private PathsenseLocationProviderApi api;
     private AlertDialog dialog;
     private AlertDialog.Builder dialogBuilder;
+    private boolean updateChecked = false;
 
     public static boolean isReplicationStopped() {
         return replicationStopped;
@@ -209,6 +212,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public static void setAutoSaveON(boolean autoSaveON) {
         MainActivity.autoSaveON = autoSaveON;
+    }
+
+    public static int getCheckCounter() {
+        return checkCounter;
+    }
+
+    public static void setCheckCounter(int checkCounter) {
+        MainActivity.checkCounter = checkCounter;
     }
 
     @Override
@@ -318,6 +329,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
         dbHandler = new DatabaseHandler(getApplicationContext());
 
+        checkUpdates();
+
         if (checkAndRequestPermissions()) {
             saveDeviceId();
         }
@@ -380,6 +393,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         handlerTask = new Runnable() {
             @Override
             public void run() {
+                checkCounter++;
+                if (getCheckCounter() > 10) {
+                    if (!isGpsEnabled()) {
+                        checkLocation();
+                    }
+                    checkUpdates();
+                    setCheckCounter(0);
+                }
                 if (isAutoSaveON() && isInternetAvailable()) {
                     Log.d(TAG, "--------------- internet --------- /// " + isInternetAvailable());
                     if (isReplicationStopped()) {
@@ -387,9 +408,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         if (counter > 8) {
                             dbHandler.startReplication();
                             startSaving();
-                            if (!isGpsEnabled()) {
-                                checkLocation();
-                            }
                             setReplicationStopped(false);
                             counter = 0;
                         }
@@ -463,7 +481,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     }
                 });
         dialogBuilder.setCancelable(false);
-        dialog = dialogBuilder.show();
+        try {
+            dialog = dialogBuilder.show();
+        }catch (Exception e){
+            Log.d(TAG, "Exception occured"+e.getMessage());
+        }
     }
 
     private boolean isLocationEnabled() {
@@ -788,6 +810,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         return super.onOptionsItemSelected(item);
+    }
+
+    public boolean isUpdateChecked() {
+        return updateChecked;
+    }
+
+    public void setUpdateChecked(boolean updateChecked) {
+        this.updateChecked = updateChecked;
+    }
+
+    public void checkUpdates() {
+        if(!isUpdateChecked()){
+            if(isInternetAvailable()) {
+                AppUpdater appUpdater = new AppUpdater(this)
+                        .setButtonDoNotShowAgain(null);
+                appUpdater.start();
+                setUpdateChecked(true);
+            }
+        }
     }
 
     class BTConnectAttemptTask extends TimerTask {
