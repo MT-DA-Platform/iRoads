@@ -16,10 +16,10 @@
         android:id="@+id/imageView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
         android:layout_marginBottom="10dp"
+        android:layout_marginTop="50dp"
         android:layout_weight="4"
-        app:srcCompat="@mipmap/ic_iroads_round" />
+        app:srcCompat="@mipmap/ic_icon" />
 
     <LinearLayout
         android:layout_width="0dp"

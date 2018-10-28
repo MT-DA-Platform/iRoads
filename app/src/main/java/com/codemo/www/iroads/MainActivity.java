@@ -1,5 +1,8 @@
 package com.codemo.www.iroads;
 
+import android.animation.ArgbEvaluator;
+import android.animation.ObjectAnimator;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -7,6 +10,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.graphics.drawable.Icon;
 import android.location.Location;
 import android.location.LocationManager;
@@ -35,6 +39,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.Animation;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -96,6 +101,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private static boolean autoSaveON = true;
     private static ImageButton saveBtn;
     private static ImageButton bConnectBtn;
+    private static ImageButton activeBtn;
     private static MainActivity activity;
     private static int counter;
     private static int checkCounter;
@@ -204,6 +210,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public static void stopSaving() {
         spinnerSave.setVisibility(View.GONE);
         saveBtn.setEnabled(true);
+    }
+
+    @SuppressLint("WrongConstant")
+    private void blinkEffect() {
+        ObjectAnimator anim = ObjectAnimator.ofInt(activeBtn, "alpha", Color.TRANSPARENT, Color.WHITE, Color.WHITE,
+                Color.TRANSPARENT);
+        anim.setDuration(2000);
+        anim.setEvaluator(new ArgbEvaluator());
+        anim.setRepeatMode(Animation.REVERSE);
+        anim.setRepeatCount(Animation.INFINITE);
+        anim.start();
     }
 
     public static boolean isAutoSaveON() {
@@ -322,11 +339,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         bConnectBtn.setOnClickListener(new ImageButton.OnClickListener() {
             @Override
             public void onClick(View view) {
-                spinnerObd.setVisibility(View.VISIBLE);
+//                spinnerObd.setVisibility(View.VISIBLE);
                 onConnectBtn();
 
             }
         });
+        activeBtn = (ImageButton) findViewById(R.id.activeBtn);
+        blinkEffect();
         dbHandler = new DatabaseHandler(getApplicationContext());
 
         checkUpdates();
@@ -400,6 +419,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     }
                     checkUpdates();
                     setCheckCounter(0);
+                }
+                if (GraphFragment.isStarted()){
+                    activeBtn.setVisibility(View.VISIBLE);
+                }else{
+                    activeBtn.setVisibility(View.INVISIBLE);
                 }
                 if (isAutoSaveON() && isInternetAvailable()) {
                     Log.d(TAG, "--------------- internet --------- /// " + isInternetAvailable());
