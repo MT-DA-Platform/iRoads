@@ -8,8 +8,8 @@
 
     <ImageView
         android:id="@+id/welcome"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         app:srcCompat="@mipmap/ic_launcher" />
